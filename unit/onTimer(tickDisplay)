@@ -46,12 +46,8 @@ screenMain.setHTML([[
             	<th>]]..tostring(ap.enabled)..[[</th>
             </tr>
             
-	</table>]])
-
-screenTelemetry.setHTML([[
-
-<div class="bootstrap">
-    <table style="
+	</table>
+        <table style="
         margin-top: auto;
         margin-left: auto;
         margin-right: auto;
@@ -96,5 +92,4 @@ screenTelemetry.setHTML([[
             	<th>]]..printNumericTable(thrustBack,2)..[[</th>
             </tr>
 	</table>
-</div>
-]])
+</div>]])
