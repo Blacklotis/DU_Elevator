@@ -42,30 +42,21 @@ screenMain.setHTML([[
             	<th>]]..round(ap.altitudePID:get(),5)..[[</th>
             </tr>
             <tr>
-            	<th>thrustUp</th>
-            	<th>]]..printNumericTable(ap.thrustUp,2)..[[</th>
+            	<th>lateralAcceleration</th>
+            	<th>]]..printNumericTable(ap.lateralAcceleration,2)..[[</th>
             </tr>
             <tr>
-            	<th>thrustDown</th>
-            	<th>]]..printNumericTable(ap.thrustDown,2)..[[</th>
+            	<th>longitudinalAcceleration</th>
+            	<th>]]..printNumericTable(ap.longitudinalAcceleration,2)..[[</th>
             </tr>
             <tr>
-            	<th>thrustRight</th>
-            	<th>]]..printNumericTable(ap.thrustRight,2)..[[</th>
+            	<th>verticalAcceleration</th>
+            	<th>]]..printNumericTable(ap.verticalAcceleration,2)..[[</th>
             </tr>
             <tr>
-            	<th>thrustLeft</th>
-            	<th>]]..printNumericTable(ap.thrustLeft,2)..[[</th>
-            </tr>
-            <tr>
-            	<th>thrustForwards</th>
-            	<th>]]..printNumericTable(ap.thrustForwards,2)..[[</th>
-            </tr>
-            <tr>
-            	<th>thrustBack</th>
-            	<th>]]..printNumericTable(ap.thrustBack,2)..[[</th>
-            </tr>
-            
+            	<th>NavigationAcceleration</th>
+            	<th>]]..printNumericTable(ap.NavigationAcceleration,2)..[[</th>
+            </tr>            
 	</table>
         <table style="
         margin-top: auto;

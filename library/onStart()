@@ -46,6 +46,10 @@ function AutoPilot:new(enabled)
     self.keepCollinearity = 1 -- for easier reading
     self.dontKeepCollinearity = 0 -- for easier reading
     self.tolerancePercentToSkipOtherPriorities = 1 -- if we are within this tolerance (in%), we don't go to the next priorities
+    self.longitudinalAcceleration = 0
+    self.lateralAcceleration = 0
+    self.verticalAcceleration = 0
+    self.NavigationAcceleration = self.longitudinalAcceleration + self.lateralAcceleration + self.verticalAcceleration
     return o
 end
 
