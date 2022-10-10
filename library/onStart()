@@ -17,7 +17,21 @@ function AutoPilot:new(enabled)
     setmetatable(o, self)
     self.__index = self
     self.enabled = enabled
-    self.ForwardInput = 0
+    self.forwardInput = 0
+    self.currentPlanet = nil
+    self.currentPosition = 0
+    self.currentAltitude = 0
+    self.currentTarget = vec3(0,0,0)
+    self.positionHoldEnabled = false
+    self.targetAltitude = 0
+    self.altitudePID = pid.new(0.1,0.00001,0.5)
+    self.thrustUp = unit.getEngineThrust("thrustUp")
+    self.thrustDown = unit.getEngineThrust("thrustDown")
+    self.thrustRight = unit.getEngineThrust("thrustRight")
+    self.thrustLeft = unit.getEngineThrust("thrustLeft")
+    self.thrustForwards = unit.getEngineThrust("thrustForwards")
+    self.thrustBack = unit.getEngineThrust("thrustBack")
+    self.brakeEnabled = brakeInput
     return o
 end
 
