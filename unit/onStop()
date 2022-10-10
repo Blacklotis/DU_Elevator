@@ -4,4 +4,3 @@ if warpdrive ~= nil then warpdrive.hideWidget() end
 if gyro ~= nil then gyro.hideWidget() end
 core.hideWidget()
 unit.switchOffHeadlights()
-
