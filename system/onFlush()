@@ -19,14 +19,14 @@ local finalBrakeInput =  ap.brakeInput
 -- validate params
 if ap.enabled
 then
-    ap.pitchSpeedFactor = math.max(pitchSpeedFactor)
-    ap.yawSpeedFactor = math.max(yawSpeedFactor, 0.01)
-    ap.rollSpeedFactor = math.max(rollSpeedFactor, 0.01)
-    ap.torqueFactor = math.max(torqueFactor, 0.01)
-    ap.brakeSpeedFactor = math.max(brakeSpeedFactor, 0.01)
-    ap.brakeFlatFactor = math.max(brakeFlatFactor, 0.01)
-    ap.autoRollFactor = math.max(autoRollFactor, 0.01)
-    ap.turnAssistFactor = math.max(turnAssistFactor, 0.01)
+    pitchSpeedFactor = math.max(ap.pitchSpeedFactor)
+    yawSpeedFactor = math.max(ap.yawSpeedFactor, 0.01)
+    rollSpeedFactor = math.max(ap.rollSpeedFactor, 0.01)
+    torqueFactor = math.max(ap.torqueFactor, 0.01)
+    brakeSpeedFactor = math.max(ap.brakeSpeedFactor, 0.01)
+    brakeFlatFactor = math.max(ap.brakeFlatFactor, 0.01)
+    autoRollFactor = math.max(ap.autoRollFactor, 0.01)
+    turnAssistFactor = math.max(ap.turnAssistFactor, 0.01)
 else
     pitchSpeedFactor = math.max(pitchSpeedFactor)
     yawSpeedFactor = math.max(yawSpeedFactor, 0.01)
@@ -66,18 +66,9 @@ local currentRollDegSign = utils.sign(currentRollDeg)
 
 -- Rotation
 local constructAngularVelocity = vec3(construct.getWorldAngularVelocity())
-local targetAngularVelocity = 0
-if ap.enabled
-then
-    targetAngularVelocity = ap.finalPitchInput * ap.pitchSpeedFactor * constructRight
-    + ap.finalRollInput * rollSpeedFactor * constructForward
-    + ap.finalYawInput * yawSpeedFactor * constructUp
-else
-    targetAngularVelocity = finalPitchInput * pitchSpeedFactor * constructRight
-    + finalRollInput * rollSpeedFactor * constructForward
-    + finalYawInput * yawSpeedFactor * constructUp
-end
-
+local targetAngularVelocity = finalPitchInput * pitchSpeedFactor * constructRight
+                                + finalRollInput * rollSpeedFactor * constructForward
+                                + finalYawInput * yawSpeedFactor * constructUp
 
 -- In atmosphere?
 if worldVertical:len() > 0.01 and unit.getAtmosphereDensity() > 0.0 then
@@ -86,12 +77,7 @@ if worldVertical:len() > 0.01 and unit.getAtmosphereDensity() > 0.0 then
     if autoRoll == true and currentRollDegAbs > autoRollRollThreshold and finalRollInput == 0 then
         local targetRollDeg = utils.clamp(0,currentRollDegAbs-30, currentRollDegAbs+30);  -- we go back to 0 within a certain limit
         if (rollPID == nil) then
-            if ap.enabled
-            then
-                rollPID = pid.new(ap.autoRollFactor * 0.01, 0, ap.autoRollFactor * 0.1) -- magic number tweaked to have a default factor in the 1-10 range
-            else
-                rollPID = pid.new(autoRollFactor * 0.01, 0, autoRollFactor * 0.1) -- magic number tweaked to have a default factor in the 1-10 range
-            end
+            rollPID = pid.new(autoRollFactor * 0.01, 0, autoRollFactor * 0.1) -- magic number tweaked to have a default factor in the 1-10 range
         end
         rollPID:inject(targetRollDeg - currentRollDeg)
         local autoRollInput = rollPID:get()
@@ -101,17 +87,9 @@ if worldVertical:len() > 0.01 and unit.getAtmosphereDensity() > 0.0 then
     local turnAssistRollThreshold = 20.0
     -- turnAssist AND currentRollDeg is big enough AND player is not pitching or yawing
     if turnAssist == true and currentRollDegAbs > turnAssistRollThreshold and finalPitchInput == 0 and finalYawInput == 0 then
-        local rollToPitchFactor = 0 -- magic number tweaked to have a default factor in the 1-10 range
-        local rollToYawFactor = 0 -- magic number tweaked to have a default factor in the 1-10 range
+        local rollToPitchFactor = turnAssistFactor * 0.1 -- magic number tweaked to have a default factor in the 1-10 range
+        local rollToYawFactor = turnAssistFactor * 0.025 -- magic number tweaked to have a default factor in the 1-10 range
 
-        if ap.enabled
-        then
-            rollToPitchFactor = ap.turnAssistFactor * 0.1
-            rollToYawFactor = ap.turnAssistFactor * 0.025
-        else
-            rollToPitchFactor = turnAssistFactor * 0.1
-            rollToYawFactor = turnAssistFactor * 0.025
-        end
         -- rescale (turnAssistRollThreshold -> 180) to (0 -> 180)
         local rescaleRollDegAbs = ((currentRollDegAbs - turnAssistRollThreshold) / (180 - turnAssistRollThreshold)) * 180
         local rollVerticalRatio = 0
@@ -145,25 +123,13 @@ then
 end
 
 -- Rotation
-local angularAcceleration = 0
-if ap.enabled
-then
-    angularAcceleration = ap.torqueFactor * (targetAngularVelocity - constructAngularVelocity)
-else
-    angularAcceleration = torqueFactor * (targetAngularVelocity - constructAngularVelocity)
-end
+local angularAcceleration = torqueFactor * (targetAngularVelocity - constructAngularVelocity)
 local airAcceleration = vec3(construct.getWorldAirFrictionAngularAcceleration())
 angularAcceleration = angularAcceleration - airAcceleration -- Try to compensate air friction
 Nav:setEngineTorqueCommand('torque', angularAcceleration, keepCollinearity, 'airfoil', '', '', tolerancePercentToSkipOtherPriorities)
 
 -- Brakes
-local brakeAcceleration = 0
-if ap.enabled
-then
-    brakeAcceleration = -finalBrakeInput * (ap.brakeSpeedFactor * constructVelocity + ap.brakeFlatFactor * constructVelocityDir)
-else
-    brakeAcceleration = -finalBrakeInput * (brakeSpeedFactor * constructVelocity + brakeFlatFactor * constructVelocityDir)
-end
+local brakeAcceleration = -finalBrakeInput * (brakeSpeedFactor * constructVelocity + brakeFlatFactor * constructVelocityDir)
 Nav:setEngineForceCommand('brake', brakeAcceleration)
 
 -- AutoNavigation regroups all the axis command by 'TargetSpeed'
