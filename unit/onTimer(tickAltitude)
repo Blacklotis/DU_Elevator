@@ -32,11 +32,9 @@ if ap.enabled then
     ap.forwardInput = system.getControlDeviceForwardInput()
     ap.yawInput = system.getControlDeviceYawInput()
     ap.leftRightInput = system.getControlDeviceLeftRightInput()
-    ap.longitudinalAcceleration = 0
-    ap.lateralAcceleration = 0
-    ap.verticalAcceleration = 0
+    ap.longitudinalAcceleration = 10
+    ap.lateralAcceleration = 10
+    ap.verticalAcceleration = 10
     ap.brakeInput = brakeInput
     -- figure out verticalThrustSolution
 end
-
-
