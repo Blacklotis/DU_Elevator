@@ -4,14 +4,6 @@
 if not displayInit then
     displayInit = true
     fontSize = "2.1"
-    destinationString = currentTarget.x .. ", " .. currentTarget.y .. ", " .. currentTarget.z
-    systemPosition = ""..getSystemPosition(currentPosition)..""
-end
-
-if brakeInput == 1 then
-    brakeText = "On"
-else
-    brakeText = "Off"
 end
 
 screenMain.setHTML([[
@@ -31,15 +23,15 @@ screenMain.setHTML([[
             </tr>
             <tr>
             	<th>currentAltitude</th>
-            	<th>]]..round(currentAltitude,2)..[[</th>
+            	<th>]]..round(ap.currentAltitude,5)..[[</th>
             </tr>
             <tr>
             	<th>Target Altitude</th>
-            	<th>]]..targetAltitude..[[</th>
+            	<th>]]..ap.targetAltitude..[[</th>
             </tr>            
             <tr>
             	<th>PID output</th>
-            	<th>]]..round(altitudeInput,5)..[[</th>
+            	<th>]]..round(ap.altitudePID:get(),5)..[[</th>
             </tr>
             <tr>
             	<th>Autopolio Enabled</th>
@@ -65,31 +57,31 @@ screenMain.setHTML([[
             </tr>
             <tr>
             	<th>Brakes</th>
-            	<th>]]..brakeText..[[</th>
+            	<th>]]..ap.brakeEnabled..[[</th>
             </tr>
             <tr>
             	<th>thrustUp</th>
-            	<th>]]..printNumericTable(thrustUp,2)..[[</th>
+            	<th>]]..printNumericTable(ap.thrustUp,2)..[[</th>
             </tr>
             <tr>
             	<th>thrustDown</th>
-            	<th>]]..printNumericTable(thrustDown,2)..[[</th>
+            	<th>]]..printNumericTable(ap.thrustDown,2)..[[</th>
             </tr>
             <tr>
             	<th>thrustRight</th>
-            	<th>]]..printNumericTable(thrustRight,2)..[[</th>
+            	<th>]]..printNumericTable(ap.thrustRight,2)..[[</th>
             </tr>
             <tr>
             	<th>thrustLeft</th>
-            	<th>]]..printNumericTable(thrustLeft,2)..[[</th>
+            	<th>]]..printNumericTable(ap.thrustLeft,2)..[[</th>
             </tr>
             <tr>
             	<th>thrustForwards</th>
-            	<th>]]..printNumericTable(thrustForwards,2)..[[</th>
+            	<th>]]..printNumericTable(ap.thrustForwards,2)..[[</th>
             </tr>
             <tr>
             	<th>thrustBack</th>
-            	<th>]]..printNumericTable(thrustBack,2)..[[</th>
+            	<th>]]..printNumericTable(ap.thrustBack,2)..[[</th>
             </tr>
 	</table>
 </div>]])

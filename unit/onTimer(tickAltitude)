@@ -3,31 +3,25 @@
 --initalize
 if not altitudeInit then
     altitudeInit = true
-    targetAltitude = 125
-    altitudePID = pid.new(0.1,0.00001,0.5)
-    currentTarget = getDestination(Alioth.center, currentPosition, targetAltitude)
+
     verticalThrustSolution = vec3(0,0,0)
 end
 
 -- only do calculations when ap is on
 if ap.enabled then
-    currentPosition = vec3(construct.getWorldPosition())
-    currentAltitude = getAltitude(currentPosition, Alioth)
-
-    --iterate PID
-    altitudePID:inject(targetAltitude - currentAltitude)
-    altitudeInput = altitudePID:get()
-
-
-
-    -- figure out verticalThrustSolution
     
-
-    --read thrust
-    thrustUp = unit.getEngineThrust("thrustUp")
-    thrustDown = unit.getEngineThrust("thrustDown")
-    thrustRight = unit.getEngineThrust("thrustRight")
-    thrustLeft = unit.getEngineThrust("thrustLeft")
-    thrustForwards = unit.getEngineThrust("thrustForwards")
-    thrustBack = unit.getEngineThrust("thrustBack")
+    ap.currentPosition = vec3(construct.getWorldPosition())
+    ap.currentAltitude = getAltitude(ap.currentPosition, ap.currentPlanet)
+    ap.currentVelocity = construct.getWorldAbsoluteVelocity()
+    ap.currentAcceleration = construct.getWorldAcceleration()
+    ap.altitudePID:inject(ap.targetAltitude - ap.currentAltitude)
+    ap.thrustUp = unit.getEngineThrust("thrustUp")
+    ap.thrustDown = unit.getEngineThrust("thrustDown")
+    ap.thrustRight = unit.getEngineThrust("thrustRight")
+    ap.thrustLeft = unit.getEngineThrust("thrustLeft")
+    ap.thrustForwards = unit.getEngineThrust("thrustForwards")
+    ap.thrustBack = unit.getEngineThrust("thrustBack")
+    
+    -- figure out verticalThrustSolution
 end
+
