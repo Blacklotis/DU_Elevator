@@ -35,6 +35,7 @@ if ap.enabled then
     ap.longitudinalAcceleration = 0
     ap.lateralAcceleration = 0
     ap.verticalAcceleration = 0
+    ap.brakeInput = brakeInput
     -- figure out verticalThrustSolution
 end
 
