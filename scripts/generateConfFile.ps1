@@ -14,11 +14,22 @@ $startHandlers = "`"handlers`":["
 
 loop all files
 
-$keyNum = 1
-$slotKeyNum = 1
-$funcName = "test()"
-$argumentValue = ""
-$code = " -- test code --"
+
+
+$keyNum = 1  # iterate up for each one ++
+
+
+
+$slotKeyNum = 1   # == enum value matching the slot in the slot file
+
+
+
+
+$funcName = "test()"     # name of file
+$argumentValue = ""         # if file name has argument
+$code = " -- test code --"  # content of file
+
+
 
 $template = "{`"key`": `"6`", `"filter`": {`"slotKey`": `"-4`", `"signature`": `"onActionStart(forward)`", `"args`": [{`"value`": `"forward`"}]}, `"code`": `"pitchInput = pitchInput - 1`"}," 
 
