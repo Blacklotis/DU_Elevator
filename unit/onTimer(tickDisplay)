@@ -19,7 +19,15 @@ screenMain.setHTML([[
             	width: 50%;
             	background-color: White;
             	color: black;">
-            	<th class="span" colspan="2">Elevator State</th>
+            	<th class="span" colspan="2">AutoPilot State</th>
+            </tr>
+            <tr>
+            	<th>Autopoliot Enabled</th>
+            	<th>]]..tostring(ap.enabled)..[[</th>
+            </tr>
+            <tr>
+            	<th>Autopoliot Brakes</th>
+            	<th>]]..ap.brakeInput..[[</th>
             </tr>
             <tr>
             	<th>currentAltitude</th>
@@ -32,32 +40,6 @@ screenMain.setHTML([[
             <tr>
             	<th>PID output</th>
             	<th>]]..round(ap.altitudePID:get(),5)..[[</th>
-            </tr>
-            <tr>
-            	<th>Autopolio Enabled</th>
-            	<th>]]..tostring(ap.enabled)..[[</th>
-            </tr>
-            
-	</table>
-        <table style="
-        margin-top: auto;
-        margin-left: auto;
-        margin-right: auto;
-        width: 100%;
-        font-size: ]]..fontSize..[[em;">
-            <tr style="
-            	width: 100%;
-            	background-color: White;
-            	color: black;">
-            	<th>Device</th><th>State</th>
-            </tr>
-            <tr>
-            	<th>EngineTags</th>
-            	<th>]]..printTable(engineTags)..[[</th>
-            </tr>
-            <tr>
-            	<th>Brakes</th>
-            	<th>]]..ap.brakeInput..[[</th>
             </tr>
             <tr>
             	<th>thrustUp</th>
@@ -82,6 +64,28 @@ screenMain.setHTML([[
             <tr>
             	<th>thrustBack</th>
             	<th>]]..printNumericTable(ap.thrustBack,2)..[[</th>
+            </tr>
+            
+	</table>
+        <table style="
+        margin-top: auto;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        font-size: ]]..fontSize..[[em;">
+            <tr style="
+            	width: 100%;
+            	background-color: White;
+            	color: black;">
+            	<th class="span" colspan="2">Elevator State</th>
+            </tr>
+            <tr>
+            	<th>EngineTags</th>
+            	<th>]]..printTable(engineTags)..[[</th>
+            </tr>
+            <tr>
+            	<th>Brakes</th>
+            	<th>]]..brakeInput..[[</th>
             </tr>
 	</table>
 </div>]])

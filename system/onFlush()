@@ -16,20 +16,32 @@ local turnAssistFactor = 2 --export: [Only in atmosphere]<br>This factor will in
 local torqueFactor = 2 -- Force factor applied to reach rotationSpeed<br>(higher value may be unstable)<br>Valid values: Superior or equal to 0.01
 
 -- validate params
-pitchSpeedFactor = math.max((ap.enabled and pitchSpeedFactor or ap.pitchSpeedFactor), 0.01)
-yawSpeedFactor = math.max((ap.enabled and yawSpeedFactor or ap.yawSpeedFactor), 0.01)
-rollSpeedFactor = math.max((ap.enabled and rollSpeedFactor or ap.rollSpeedFactor), 0.01)
-torqueFactor = math.max((ap.enabled and torqueFactor or ap.torqueFactor), 0.01)
-brakeSpeedFactor = math.max((ap.enabled and brakeSpeedFactor or ap.brakeSpeedFactor), 0.01)
-brakeFlatFactor = math.max((ap.enabled and brakeFlatFactor or ap.brakeFlatFactor), 0.01)
-autoRollFactor = math.max((ap.enabled and autoRollFactor or ap.autoRollFactor), 0.01)
-turnAssistFactor = math.max((ap.enabled and turnAssistFactor or ap.turnAssistFactor), 0.01)
+pitchSpeedFactor = math.max(pitchSpeedFactor)
+yawSpeedFactor = math.max(yawSpeedFactor, 0.01)
+rollSpeedFactor = math.max(rollSpeedFactor, 0.01)
+torqueFactor = math.max(torqueFactor, 0.01)
+brakeSpeedFactor = math.max(brakeSpeedFactor, 0.01)
+brakeFlatFactor = math.max(brakeFlatFactor, 0.01)
+autoRollFactor = math.max(autoRollFactor, 0.01)
+turnAssistFactor = math.max(turnAssistFactor, 0.01)
 
 -- final inputs
-local finalPitchInput = pitchInput + (ap.enabled and system.getControlDeviceForwardInput() or ap.forwardInput)
-local finalRollInput = rollInput + (ap.enabled and system.getControlDeviceYawInput() or ap.yawInput)
-local finalYawInput = yawInput - (ap.enabled and system.getControlDeviceLeftRightInput() or ap.leftRightInput)
-local finalBrakeInput =  ap.enabled and brakeInput or ap.brakeInput
+local finalPitchInput
+local finalRollInput
+local finalYawInput
+local finalBrakeInput
+if ap.enabled
+then
+    finalPitchInput = pitchInput + ap.forwardInput
+    finalRollInput = rollInput + ap.yawInput
+    finalYawInput = yawInput - ap.leftRightInput
+    finalBrakeInput = ap.brakeInput
+else
+    finalPitchInput = pitchInput + system.getControlDeviceForwardInput()
+    finalRollInput = rollInput + system.getControlDeviceYawInput()
+    finalYawInput = yawInput - system.getControlDeviceLeftRightInput()
+    finalBrakeInput = brakeInput
+end
 
 -- Axis
 local worldVertical = vec3(core.getWorldVertical()) -- along gravity
