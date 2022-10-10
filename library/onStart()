@@ -1,32 +1,45 @@
-Alioth = { 
-    ["id"] = 0,
-    ["surfaceArea"] = 199718.78,
-    ["radius"] = 126067.8984375,
-    ["center"] = vec3(-8.0000,-8.0000,-126303.0000)}
+Planet = {}
+function Planet:new(system,id,surfaceArea,center,radius)
+    local o = {}
+    setmetatable(o, self)
+    self.__index = self
+    self.system = system
+    self.id = id
+    self.surfaceArea = surfaceArea or 0
+    self.center = center or vec3(0,0,0)
+    self.radius = radius or 0
+    return o
+end
+
+AutoPilot = {}
+function AutoPilot:new(enabled)
+    local o = {}
+    setmetatable(o, self)
+    self.__index = self
+    self.enabled = enabled
+    self.ForwardInput = 0
+    return o
+end
 
 function round(num, precision)
-  local mult = 10^(precision or 0)
-  return math.floor(num * mult + 0.5) / mult
+    local mult = 10^(precision or 0)
+    return math.floor(num * mult + 0.5) / mult
 end 
 
-function getAltitude(currentPosition)
-    local coords = currentPosition - Alioth.center
+function getAltitude(currentPosition, currentPlanet)
+    local coords = currentPosition - currentPlanet.center
     local distance = coords:len()
-    return distance - Alioth.radius  
+    return distance - currentPlanet.radius  
 end
 
 function getDestination(center, location, height)
-	
 	local dx = location.x - center.x
 	local dy = location.y - center.y
 	local dz = location.z - center.z
-
 	local k = math.sqrt( (height^2) / ((dx^2)+ (dy^2)+(dz^2)) )
-	
 	local x3 = location.x + dx * k;
 	local y3 = location.y + dy * k;
 	local z3 = location.z + dz * k;
-
 	return vec3({x3,y3,z3})
 end
 

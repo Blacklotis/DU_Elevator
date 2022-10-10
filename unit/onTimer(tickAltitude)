@@ -1,0 +1,28 @@
+--tickAltitude(TickRate:0.1)
+
+--initalize
+if not altitudeInit then
+    altitudeInit = true
+    targetAltitude = 125
+    altitudePID = pid.new(0.1,0.00001,0.5)
+    currentPosition = vec3(construct.getWorldPosition())
+    currentAltitude = getAltitude(currentPosition, Alioth)
+    currentTarget = getDestination(Alioth.center, currentPosition, targetAltitude)
+end
+
+--iterate PID
+altitudePID:inject(targetAltitude - currentAltitude)
+altitudeInput = altitudePID:get()
+
+--read thrust
+thrustUp = unit.getEngineThrust("thrustUp")
+thrustDown = unit.getEngineThrust("thrustDown")
+thrustRight = unit.getEngineThrust("thrustRight")
+thrustLeft = unit.getEngineThrust("thrustLeft")
+thrustForwards = unit.getEngineThrust("thrustForwards")
+thrustBack = unit.getEngineThrust("thrustBack")
+
+--run commands
+if autopilotEnabled then
+    --Nav.axisCommandManager:updateCommandFromActionStart(axisCommandId.vertical, setPoint)
+end

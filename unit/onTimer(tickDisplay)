@@ -1,0 +1,100 @@
+--tickDisplay(TickRate:0.5)
+
+--initalize
+if not displayInit then
+    displayInit = true
+    fontSize = "2.1"
+    destinationString = currentTarget.x .. ", " .. currentTarget.y .. ", " .. currentTarget.z
+    systemPosition = ""..getSystemPosition(currentPosition)..""
+end
+
+if brakeInput == 1 then
+    brakeText = "On"
+else
+    brakeText = "Off"
+end
+
+screenMain.setHTML([[
+
+<div class="bootstrap">
+    <table style="
+        margin-top: auto;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        font-size: ]]..fontSize..[[em;">
+            <tr style="
+            	width: 50%;
+            	background-color: White;
+            	color: black;">
+            	<th class="span" colspan="2">Elevator State</th>
+            </tr>
+            <tr>
+            	<th>currentAltitude</th>
+            	<th>]]..round(currentAltitude,2)..[[</th>
+            </tr>
+            <tr>
+            	<th>Target Altitude</th>
+            	<th>]]..targetAltitude..[[</th>
+            </tr>            
+            <tr>
+            	<th>PID output</th>
+            	<th>]]..round(altitudeInput,5)..[[</th>
+            </tr>
+            <tr>
+            	<th>Autopolio Enabled</th>
+            	<th>]]..tostring(ap.enabled)..[[</th>
+            </tr>
+            
+	</table>]])
+
+screenTelemetry.setHTML([[
+
+<div class="bootstrap">
+    <table style="
+        margin-top: auto;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        font-size: ]]..fontSize..[[em;">
+            <tr style="
+            	width: 100%;
+            	background-color: White;
+            	color: black;">
+            	<th>Device</th><th>State</th>
+            </tr>
+            <tr>
+            	<th>EngineTags</th>
+            	<th>]]..printTable(engineTags)..[[</th>
+            </tr>
+            <tr>
+            	<th>Brakes</th>
+            	<th>]]..brakeText..[[</th>
+            </tr>
+            <tr>
+            	<th>thrustUp</th>
+            	<th>]]..printNumericTable(thrustUp,2)..[[</th>
+            </tr>
+            <tr>
+            	<th>thrustDown</th>
+            	<th>]]..printNumericTable(thrustDown,2)..[[</th>
+            </tr>
+            <tr>
+            	<th>thrustRight</th>
+            	<th>]]..printNumericTable(thrustRight,2)..[[</th>
+            </tr>
+            <tr>
+            	<th>thrustLeft</th>
+            	<th>]]..printNumericTable(thrustLeft,2)..[[</th>
+            </tr>
+            <tr>
+            	<th>thrustForwards</th>
+            	<th>]]..printNumericTable(thrustForwards,2)..[[</th>
+            </tr>
+            <tr>
+            	<th>thrustBack</th>
+            	<th>]]..printNumericTable(thrustBack,2)..[[</th>
+            </tr>
+	</table>
+</div>
+]])
