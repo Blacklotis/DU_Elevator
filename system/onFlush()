@@ -170,7 +170,9 @@ end
 -- Vertical Translation
 local verticalStrafeEngineTags = 'thrust analog vertical'
 local verticalCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.vertical)
-if (verticalCommandType == axisCommandType.byThrottle) then
+if ap.enabled then
+    Nav:setEngineForceCommand(verticalStrafeEngineTags, ap.verticalStrafeAcceleration, keepCollinearity, 'airfoil', 'ground', '', tolerancePercentToSkipOtherPriorities)
+elseif (verticalCommandType == axisCommandType.byThrottle) then
     local verticalStrafeAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(verticalStrafeEngineTags,axisCommandId.vertical)
     Nav:setEngineForceCommand(verticalStrafeEngineTags, verticalStrafeAcceleration, keepCollinearity, 'airfoil', 'ground', '', tolerancePercentToSkipOtherPriorities)
 elseif  (verticalCommandType == axisCommandType.byTargetSpeed) then
