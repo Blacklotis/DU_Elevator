@@ -42,6 +42,9 @@ function AutoPilot:new(enabled)
     self.forwardInput = system.getControlDeviceForwardInput()
     self.yawInput = system.getControlDeviceYawInput()
     self.leftRightInput = system.getControlDeviceLeftRightInput()
+    self.keepCollinearity = 1 -- for easier reading
+    self.dontKeepCollinearity = 0 -- for easier reading
+    self.tolerancePercentToSkipOtherPriorities = 1 -- if we are within this tolerance (in%), we don't go to the next priorities
     return o
 end
 
