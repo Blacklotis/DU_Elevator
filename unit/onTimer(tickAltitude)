@@ -21,6 +21,18 @@ if ap.enabled then
     ap.thrustLeft = unit.getEngineThrust("thrustLeft")
     ap.thrustForwards = unit.getEngineThrust("thrustForwards")
     ap.thrustBack = unit.getEngineThrust("thrustBack")
+    ap.brakeInput = brakeInput
+    ap.pitchSpeedFactor = 0
+    ap.yawSpeedFactor = 0
+    ap.rollSpeedFactor = 0
+    ap.torqueFactor = 0
+    ap.brakeSpeedFactor = 0
+    ap.brakeFlatFactor = 0
+    ap.autoRollFactor = 0
+    ap.turnAssistFactor = 0
+    ap.forwardInput = system.getControlDeviceForwardInput()
+    ap.yawInput = system.getControlDeviceYawInput()
+    ap.leftRightInput = system.getControlDeviceLeftRightInput()
     
     -- figure out verticalThrustSolution
 end

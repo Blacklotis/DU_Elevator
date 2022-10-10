@@ -57,7 +57,7 @@ screenMain.setHTML([[
             </tr>
             <tr>
             	<th>Brakes</th>
-            	<th>]]..ap.brakeEnabled..[[</th>
+            	<th>]]..ap.brakeInput..[[</th>
             </tr>
             <tr>
             	<th>thrustUp</th>

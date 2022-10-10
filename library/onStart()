@@ -17,7 +17,6 @@ function AutoPilot:new(enabled)
     setmetatable(o, self)
     self.__index = self
     self.enabled = enabled
-    self.forwardInput = 0
     self.currentPlanet = nil
     self.currentPosition = 0
     self.currentAltitude = 0
@@ -31,7 +30,18 @@ function AutoPilot:new(enabled)
     self.thrustLeft = unit.getEngineThrust("thrustLeft")
     self.thrustForwards = unit.getEngineThrust("thrustForwards")
     self.thrustBack = unit.getEngineThrust("thrustBack")
-    self.brakeEnabled = brakeInput
+    self.brakeInput = brakeInput
+    self.pitchSpeedFactor = 0
+    self.yawSpeedFactor = 0
+    self.rollSpeedFactor = 0
+    self.torqueFactor = 0
+    self.brakeSpeedFactor = 0
+    self.brakeFlatFactor = 0
+    self.autoRollFactor = 0
+    self.turnAssistFactor = 0
+    self.forwardInput = system.getControlDeviceForwardInput()
+    self.yawInput = system.getControlDeviceYawInput()
+    self.leftRightInput = system.getControlDeviceLeftRightInput()
     return o
 end
 
