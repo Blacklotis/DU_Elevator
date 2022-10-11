@@ -1,132 +1,168 @@
 "slots": 
-{"-1": 
-	{"name": "unit", "type": 
-		{"methods": [], "events": []
-		}
-	},
-	"-3": 
-	{"name": "player", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"-2": 
-	{"name": "construct", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"-4": 
-	{"name": "system", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"0": 
-	{"name": "core", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"-5": 
-	{"name": "library", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"1": 
-	{"name": "atmofueltank_1", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"2": 
-	{"name": "spacefueltank_1", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"3": 
-	{"name": "slot4", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"4": 
-	{"name": "slot5", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"5": 
-	{"name": "slot6", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"6": 
-	{"name": "slot7", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"7": 
-	{"name": "slot8", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"8": 
-	{"name": "slot9", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"9": 
-	{"name": "slot10", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"10": 
-	{"name": "slot11", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"11": 
-	{"name": "slot12", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"12": 
-	{"name": "slot13", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"13": 
-	{"name": "slot14", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"14": 
-	{"name": "slot15", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"15": 
-	{"name": "slot16", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"16": 
-	{"name": "slot17", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"17": 
-	{"name": "slot18", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"18": 
-	{"name": "slot19", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"19": 
-	{"name": "slot20", "type": 
-		{"methods": [], "events": []
-		}
-	}, 
-	"20": 
-	{"name": "radar_1", "type": 
-		{"methods": [], "events": []
-		}
-	}
+{
+    "0": {
+      "name": "core",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "1": {
+      "name": "atmofueltank_1",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "2": {
+      "name": "screenMain",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "3": {
+      "name": "screenTelemetry",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "4": {
+      "name": "slot5",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "5": {
+      "name": "slot6",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "6": {
+      "name": "slot7",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "7": {
+      "name": "slot8",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "8": {
+      "name": "slot9",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "9": {
+      "name": "slot10",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "-1": {
+      "name": "unit",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "-3": {
+      "name": "player",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "-2": {
+      "name": "construct",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "-4": {
+      "name": "system",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    },
+    "-5": {
+      "name": "library",
+      "type": {
+        "events": [
+          
+        ],
+        "methods": [
+          
+        ]
+      }
+    }
 }
