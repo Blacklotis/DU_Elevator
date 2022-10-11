@@ -16,12 +16,15 @@ loop all files
 
 
 
+
+
+
 $keyNum = 1  # iterate up for each one ++
 
-$slotKeyNum = 1   # == enum value matching the slot in the slot file
+$slotKeyNum = 1   # == enum value matching the slot in the slot file     #library = -5, system = -4, construct = -2, player = -3, unit = -1, core = 0
 
-$funcName = "test()"     # name of file
-$argumentValue = ""         # if file name has argument   looks like {"value": "forward"}
+$funcName = "test(testArg)"     # name of file
+$argumentValue = "{`"value`": `"testArg`"}"         # if file name has argument   looks like {"value": "forward"}
 $code = " -- test code --"  # content of file
 
 $rowString = [string]::Format("{`"key`": `"{0}`", `"filter`": {`"slotKey`": `"{1}`", `"signature`": `"{2}`", `"args`": [{3}]}, `"code`": `"{4}`"},", $keyNum, $slotKeyNum, $funcName, $argumentValue, $code)
