@@ -23,13 +23,13 @@ $startHandlers | Out-File -FilePath $outputFileName -Append
 $sourceDirectory = Get-Location
 $fullFileNames = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).FullName
 $directories = ((Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).Directory).BaseName
-$files = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).Name.Replace(".lua",'')
+$files = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).BaseName
 $regex = [regex]"([^()]+)"
 
 for($i = 0; $i -lt $directories.Count; $i++)
 {
     $keyNum = $i
-    $slotKeyNum = [int][SlotKeyNum]::$folder
+    $slotKeyNum = [int][SlotKeyNum]::($directories[$i])
     $funcName = $files[$i]
     if([regex]::Matches($funcName, $regex).Count -gt 2)
     {
@@ -42,7 +42,6 @@ for($i = 0; $i -lt $directories.Count; $i++)
     $rowString = "{`"key`": `"{$keyNum}`", `"filter`": {`"slotKey`": `"{$slotKeyNum}`", `"signature`": `"{$funcName}`", `"args`": [{$argumentValue}]}, `"code`": `"{$code}`"},"
 
     $rowString | Out-File -FilePath $outputFileName -Append
-
 }
 
 $endHandlers = "],"
