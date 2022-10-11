@@ -1,7 +1,7 @@
 $slotsFileName = "scripts\resources\confSlots.txt"
 $eventsFileName = "scripts\resources\confEvents.txt"
 $methodsFileName = "scripts\resources\confMethods.txt"
-$outputFileName = "Elevator.conf"
+$outputFileName = "Elevator.conf.json"
 $commaSpace = ", "
 
 enum SlotKeyNum
@@ -24,31 +24,27 @@ $sourceDirectory = Get-Location
 $fullFileNames = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).FullName
 $directories = ((Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).Directory).BaseName
 $files = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).BaseName
-$regex = [regex]"([^()]+)"
+$regexBetweenParens = [regex]"([^()]+)"
+$regexBetweenNestedParens = [regex]"\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)"
 
 for($i = 0; $i -lt $directories.Count; $i++)
 {
     $keyNum = $i
     $slotKeyNum = [int][SlotKeyNum]::($directories[$i])
     $funcName = $files[$i]
-    if([regex]::Matches($funcName, $regex).Count -ge 2)
+    if([regex]::Matches($funcName, $regexBetweenParens).Count -ge 2)
     {
-        $funcName = $funcName -join "(tag)"
-        $argumentValue = "{`"value`": `"" + [regex]::Matches($funcName, $regex)[1] + """}" 
+        $funcName = $funcName -join "(tag)" #Game replaces custom tags witht he word tag
+        $argumentValue = "{`"value`": `"" + [regex]::Matches($funcName, $regexBetweenParens)[1] + """}" 
     }   
     else {
         $argumentValue = ""
     }
     $code = [System.IO.File]::ReadAllText($fullFileNames[$i])
-    #first try: $rowString = "{`"key`": `"{$keyNum}`", `"filter`": {`"slotKey`": `"{$slotKeyNum}`", `"signature`": `"{$funcName}`", `"args`": [{$argumentValue}]}, `"code`": `"{$code}`"},"
-    #example from game: {"code":"","filter":{"args":[{"value":"strafeleft"}],"signature":"onActionStop(strafeleft)","slotKey":"-4"},"key":"19"}
     $rowString = "{`"code`":`"$code`",`"filter`":{`"args`":[$argumentValue],`"signature`":`"$funcName`",`"slotKey`":`"$slotKeyNum`"},`"key`":`"$keyNum`"}"
     
     $rowString | Out-File -FilePath $outputFileName -Append
 }
-
-#{"code":"","filter":{"args":[{"value":"brake"}],"signature":"onActionLoop(brake)","slotKey":"-4"},"key":"34"}
-
 
 $endHandlers = "],"
 $endHandlers | Out-File -FilePath $outputFileName -Append
@@ -59,8 +55,23 @@ $commaSpace | Out-File -FilePath $outputFileName -Append
 Get-Content $eventsFileName | Out-File -FilePath $outputFileName -Append
 "}" | Out-File -FilePath $outputFileName -Append
 
+#Removing all white space
 $fileContents = Get-Content $outputFileName 
 $fileContents = [string]::join("",($fileContents.Split("`n")))
 $fileContents = $fileContents -replace '\s+', '' 
 
+#Pattern matching to esacpe all strings that are part of a parameter
+$quotesBetweenNestedParens = [regex]::Matches($fileContents, $regexBetweenNestedParens)
+$escapedQuotesBetweenNestedParens = [regex]::Matches($fileContents, $regexBetweenNestedParens) -replace ("`"","\`"")
+
+for($i = 0; $i -lt $quotesBetweenNestedParens.Count; $i++)
+{
+    #only do large string replace when there was actually a change
+    if($escapedQuotesBetweenNestedParens[$i].Contains("`"")) 
+    {
+        $fileContents = $fileContents.Replace($quotesBetweenNestedParens[$i], $escapedQuotesBetweenNestedParens[$i])
+    }
+}
+
+$fileContents | Out-File -FilePath $outputFileName -Force
 $fileContents | Set-Clipboard
