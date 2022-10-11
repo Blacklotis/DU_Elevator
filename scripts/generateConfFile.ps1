@@ -18,13 +18,13 @@ Get-Content $slotsFileName | Out-File -FilePath $outputFileName
 $commaSpace | Out-File -FilePath $outputFileName -Append
 
 $startHandlers = "`"handlers`":["
-$sourceDirectory = Get-Location + "/src"
+$sourceDirectory = Get-Location
 $fullFileNames = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).FullName
 $directories = ((Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).Directory).BaseName
-$files = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).Name
+$files = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).Name.Replace(".lua",'')
 $regex = [regex]"([^()]+)"
 
-for($i = 0; $i -le $directories.Count; $i++)
+for($i = 0; $i -lt $directories.Count; $i++)
 {
     $keyNum = $i
     $slotKeyNum = [int][SlotKeyNum]::$folder
