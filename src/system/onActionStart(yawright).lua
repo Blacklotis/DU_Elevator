@@ -1,0 +1,1 @@
+yawInput = yawInput - 1
