@@ -143,7 +143,7 @@ local longitudinalCommandType = Nav.axisCommandManager:getAxisCommandType(axisCo
 local longitudinalAcceleration = 0
 if ap.enabled
 then
-    longitudinalAcceleration = ap.longitudinalAcceleration
+    longitudinalAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(longitudinalEngineTags,axisCommandId.longitudinal)
 else
     longitudinalAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(longitudinalEngineTags,axisCommandId.longitudinal)
 end
@@ -169,7 +169,7 @@ local lateralCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommand
 local lateralStrafeAcceleration = 0
 if ap.enabled
 then
-    lateralStrafeAcceleration =  ap.lateralAcceleration
+    lateralStrafeAcceleration =  Nav.axisCommandManager:composeAxisAccelerationFromThrottle(lateralStrafeEngineTags,axisCommandId.lateral)
 else
     lateralStrafeAcceleration =  Nav.axisCommandManager:composeAxisAccelerationFromThrottle(lateralStrafeEngineTags,axisCommandId.lateral)
 end
@@ -184,9 +184,12 @@ end
 local verticalStrafeEngineTags = 'thrust analog vertical'
 local verticalCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.vertical)
 local verticalStrafeAcceleration = 0
+testTargetSpeed = 0
 if ap.enabled
 then
-    verticalStrafeAcceleration = ap.verticalAcceleration
+    testTargetSpeed = Nav.axisCommandManager:getTargetSpeed(axisCommandId.vertical)
+    Nav.axisCommandManager:setTargetSpeedCommand(axisCommandId.vertical, ap.verticalAcceleration)
+    verticalStrafeAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.vertical)
 else
     verticalStrafeAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(verticalStrafeEngineTags,axisCommandId.vertical)
 end
@@ -195,6 +198,9 @@ if (verticalCommandType == axisCommandType.byThrottle) then
 elseif  (verticalCommandType == axisCommandType.byTargetSpeed) then
     autoNavigationAcceleration = autoNavigationAcceleration + Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.vertical)
     autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. verticalStrafeEngineTags 
+    if ap.enabled then
+        Nav:setEngineForceCommand(verticalStrafeEngineTags, verticalStrafeAcceleration, keepCollinearity, 'airfoil', 'ground', '', tolerancePercentToSkipOtherPriorities)
+    end
 end
 
 -- Auto Navigation (Cruise Control)
@@ -205,7 +211,7 @@ if (autoNavigationAcceleration:len() > constants.epsilon) then
     end
     if ap.enabled
     then
-        Nav:setEngineForceCommand(autoNavigationEngineTags, ap.NavigationAcceleration, dontKeepCollinearity, '', '', '', tolerancePercentToSkipOtherPriorities)
+        --Nav:setEngineForceCommand(autoNavigationEngineTags, ap.NavigationAcceleration, dontKeepCollinearity, '', '', '', tolerancePercentToSkipOtherPriorities)
     else
         Nav:setEngineForceCommand(autoNavigationEngineTags, autoNavigationAcceleration, dontKeepCollinearity, '', '', '', tolerancePercentToSkipOtherPriorities)
     end
