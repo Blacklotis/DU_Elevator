@@ -31,18 +31,24 @@ for($i = 0; $i -lt $directories.Count; $i++)
     $keyNum = $i
     $slotKeyNum = [int][SlotKeyNum]::($directories[$i])
     $funcName = $files[$i]
-    if([regex]::Matches($funcName, $regex).Count -gt 2)
+    if([regex]::Matches($funcName, $regex).Count -ge 2)
     {
-        $argumentValue = "{`"" + [regex]::Matches($funcName, $regex)[0] + "`": `"" + [regex]::Matches($funcName, $regex)[1] + """}" 
+        $funcName = $funcName -join "(tag)"
+        $argumentValue = "{`"value`": `"" + [regex]::Matches($funcName, $regex)[1] + """}" 
     }   
     else {
         $argumentValue = ""
     }
     $code = [System.IO.File]::ReadAllText($fullFileNames[$i])
-    $rowString = "{`"key`": `"{$keyNum}`", `"filter`": {`"slotKey`": `"{$slotKeyNum}`", `"signature`": `"{$funcName}`", `"args`": [{$argumentValue}]}, `"code`": `"{$code}`"},"
-
+    #first try: $rowString = "{`"key`": `"{$keyNum}`", `"filter`": {`"slotKey`": `"{$slotKeyNum}`", `"signature`": `"{$funcName}`", `"args`": [{$argumentValue}]}, `"code`": `"{$code}`"},"
+    #example from game: {"code":"","filter":{"args":[{"value":"strafeleft"}],"signature":"onActionStop(strafeleft)","slotKey":"-4"},"key":"19"}
+    $rowString = "{`"code`":`"$code`",`"filter`":{`"args`":[$argumentValue],`"signature`":`"$funcName`",`"slotKey`":`"$slotKeyNum`"},`"key`":`"$keyNum`"}"
+    
     $rowString | Out-File -FilePath $outputFileName -Append
 }
+
+#{"code":"","filter":{"args":[{"value":"brake"}],"signature":"onActionLoop(brake)","slotKey":"-4"},"key":"34"}
+
 
 $endHandlers = "],"
 $endHandlers | Out-File -FilePath $outputFileName -Append
@@ -53,4 +59,8 @@ $commaSpace | Out-File -FilePath $outputFileName -Append
 Get-Content $eventsFileName | Out-File -FilePath $outputFileName -Append
 "}" | Out-File -FilePath $outputFileName -Append
 
-Get-Content $outputFileName | Set-Clipboard
+$fileContents = Get-Content $outputFileName 
+$fileContents = [string]::join("",($fileContents.Split("`n")))
+$fileContents = $fileContents -replace '\s+', '' 
+
+$fileContents | Set-Clipboard
