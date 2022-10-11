@@ -18,6 +18,8 @@ Get-Content $slotsFileName | Out-File -FilePath $outputFileName
 $commaSpace | Out-File -FilePath $outputFileName -Append
 
 $startHandlers = "`"handlers`":["
+$startHandlers | Out-File -FilePath $outputFileName -Append
+
 $sourceDirectory = Get-Location
 $fullFileNames = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).FullName
 $directories = ((Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).Directory).BaseName
@@ -38,9 +40,13 @@ for($i = 0; $i -lt $directories.Count; $i++)
     }
     $code = [System.IO.File]::ReadAllText($fullFileNames[$i])
     $rowString = "{`"key`": `"{$keyNum}`", `"filter`": {`"slotKey`": `"{$slotKeyNum}`", `"signature`": `"{$funcName}`", `"args`": [{$argumentValue}]}, `"code`": `"{$code}`"},"
+
+    $rowString | Out-File -FilePath $outputFileName -Append
+
 }
 
 $endHandlers = "],"
+$endHandlers | Out-File -FilePath $outputFileName -Append
 
 Get-Content $methodsFileName | Out-File -FilePath $outputFileName -Append
 $commaSpace | Out-File -FilePath $outputFileName -Append
