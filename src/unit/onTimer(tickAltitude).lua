@@ -3,7 +3,9 @@
 --initalize
 if not altitudeInit then
     altitudeInit = true
-
+    ap.currentPosition = vec3(construct.getWorldPosition())
+    ap.currentAltitude = getAltitude(ap.currentPosition, ap.currentPlanet)
+    targetPlanetPos = getSystemPosition(ap.currentPosition) + vec3(0, 0, ap.targetAltitude - ap.currentAltitude)
     verticalThrustSolution = vec3(0,0,0)
 end
 
@@ -40,8 +42,14 @@ if ap.enabled then
     heightDelta = ap.targetAltitude - ap.currentAltitude
     ap.verticalAcceleration = math.min(heightDelta, 1200)
 
-    screenMain.setCenteredText("TargetAltitude: " .. ap.targetAltitude .. "\n" ..
-                               "HeightDelta: " .. heightDelta .. "\n" ..
+    currentPlanetPos = getSystemPosition(ap.currentPosition)
+
+    screenMain.setCenteredText("Current POS: " .. tostring(currentPlanetPos) .. "\n" ..
+                               "Target POS: " .. tostring(targetPlanetPos) .. "\n" ..
+                               "TargetAltitude: " .. ap.targetAltitude .. "m\n" ..
+                               "CurrentAltitude: " .. ap.targetAltitude .. "m\n" ..
+                               "HeightDelta: " .. heightDelta .. "m\n" ..
+                               "Deviation: " .. tostring(currentPlanetPos - targetPlanetPos) .. "\n" ..
                                "Target Speed Up: " .. ap.verticalAcceleration .. "\n" ..
                                "Target Speed Forward: " .. ap.lateralAcceleration .. "\n" ..
                                "Target Speed Left: " .. ap.longitudinalAcceleration )

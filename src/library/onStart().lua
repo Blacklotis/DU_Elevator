@@ -81,7 +81,7 @@ function getDestination(center, location, height)
 	return vec3({x3,y3,z3})
 end
 
-function getSystemPosition(currentPosition)
+function getSystemPositionString(currentPosition)
     local coords = currentPosition - Alioth.center
     local distance = coords:len()
     local altitude = distance - Alioth.radius
@@ -91,4 +91,16 @@ function getSystemPosition(currentPosition)
     longitude = phi >= 0 and phi or (2 * math.pi + phi)
     latitude = math.pi / 2 - math.acos(coords.z / distance)
     return "::pos{0,2,"..math.deg(latitude)..","..math.deg(longitude)..","..altitude.."}"
+end
+
+function getSystemPosition(currentPosition)
+    local coords = currentPosition - Alioth.center
+    local distance = coords:len()
+    local altitude = distance - Alioth.radius
+    local latitude = 0
+    local longitude = 0
+    local phi = math.atan(coords.y, coords.x)
+    longitude = phi >= 0 and phi or (2 * math.pi + phi)
+    latitude = math.pi / 2 - math.acos(coords.z / distance)
+    return vec3(latitude, longitude, altitude)
 end
