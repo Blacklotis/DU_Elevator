@@ -39,6 +39,9 @@ function AutoPilot:new(enabled)
     self.brakeFlatFactor = 0
     self.autoRollFactor = 0
     self.turnAssistFactor = 0
+    self.lateralAcceleration = 0
+    self.verticalAcceleration = 0
+    self.longitudinalAcceleration = 0
     self.forwardInput = system.getControlDeviceForwardInput()
     self.yawInput = system.getControlDeviceYawInput()
     self.leftRightInput = system.getControlDeviceLeftRightInput()
