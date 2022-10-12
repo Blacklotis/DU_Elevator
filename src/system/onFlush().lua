@@ -71,8 +71,6 @@ local targetAngularVelocity = finalPitchInput * pitchSpeedFactor * constructRigh
                                 + finalYawInput * yawSpeedFactor * constructUp
 
 
-
--- Auto Level Code 
 -- In atmosphere?
 if worldVertical:len() > 0.01 and unit.getAtmosphereDensity() > 0.0 then
     local autoRollRollThreshold = 1.0
@@ -132,10 +130,8 @@ angularAcceleration = angularAcceleration - airAcceleration -- Try to compensate
 Nav:setEngineTorqueCommand('torque', angularAcceleration, keepCollinearity, 'airfoil', '', '', tolerancePercentToSkipOtherPriorities)
 
 -- Brakes
-if not ap.enabled then
-    local brakeAcceleration = -finalBrakeInput * (brakeSpeedFactor * constructVelocity + brakeFlatFactor * constructVelocityDir)
-    Nav:setEngineForceCommand('brake', brakeAcceleration)
-end
+local brakeAcceleration = -finalBrakeInput * (brakeSpeedFactor * constructVelocity + brakeFlatFactor * constructVelocityDir)
+Nav:setEngineForceCommand('brake', brakeAcceleration)
 
 -- AutoNavigation regroups all the axis command by 'TargetSpeed'
 local autoNavigationEngineTags = ''
