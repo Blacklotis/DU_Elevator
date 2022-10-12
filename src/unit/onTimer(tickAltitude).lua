@@ -16,6 +16,7 @@ if ap.enabled then
     ap.currentAltitude = getAltitude(ap.currentPosition, ap.currentPlanet)
     ap.currentVelocity = construct.getWorldAbsoluteVelocity()
     ap.currentAcceleration = construct.getWorldAcceleration()
+    ap.heading = getHeading(vec3(construct.getWorldOrientationForward()))
     ap.thrustUp = unit.getEngineThrust("thrustUp")
     ap.thrustDown = unit.getEngineThrust("thrustDown")
     ap.thrustRight = unit.getEngineThrust("thrustRight")
@@ -36,9 +37,9 @@ if ap.enabled then
     ap.longitudinalAcceleration = 0
     ap.lateralAcceleration = 0
     ap.verticalAcceleration = 0
-    ap.brakeInput = false
+    ap.brakeInput = brakeInput
 
-    -- figure out verticalThrustSolution
+    -- figure out verticalThrustSolution, right now, just thrust at your height delta, works fine lol
     heightDelta = ap.targetAltitude - ap.currentAltitude
     ap.verticalAcceleration = math.min(heightDelta, 1200)
 
@@ -46,6 +47,7 @@ if ap.enabled then
 
     screenMain.setCenteredText("Current POS: " .. tostring(currentPlanetPos) .. "\n" ..
                                "Target POS: " .. tostring(targetPlanetPos) .. "\n" ..
+                               "Heading: " .. ap.heading .. "\n" .. 
                                "TargetAltitude: " .. ap.targetAltitude .. "m\n" ..
                                "CurrentAltitude: " .. ap.targetAltitude .. "m\n" ..
                                "HeightDelta: " .. heightDelta .. "m\n" ..

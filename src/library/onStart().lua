@@ -20,7 +20,11 @@ function AutoPilot:new(enabled)
     self.currentPlanet = nil
     self.currentPosition = 0
     self.currentAltitude = 0
+    self.currentVelocity = 0
+    self.currentAcceleration = 0
+    self.heading = 0
     self.currentTarget = vec3(0,0,0)
+    self.targetHeading = 0
     self.positionHoldEnabled = false
     self.targetAltitude = 130
     self.altitudePID = pid.new(0.1,0.00001,0.5)
@@ -103,4 +107,17 @@ function getSystemPosition(currentPosition)
     longitude = phi >= 0 and phi or (2 * math.pi + phi)
     latitude = math.pi / 2 - math.acos(coords.z / distance)
     return vec3(latitude, longitude, altitude)
+end
+
+local function getHeading(forward) -- code provided by tomisunlucky   
+    local up = -vec3(core.getWorldVertical())
+    forward = forward - forward:project_on(up)
+    local north = vec3(0, 0, 1)
+    north = north - north:project_on(up)
+    local east = north:cross(up)
+    local angle = north:angle_between(forward) * constants.rad2deg
+    if forward:dot(east) < 0 then
+        angle = 360-angle
+    end
+    return angle
 end

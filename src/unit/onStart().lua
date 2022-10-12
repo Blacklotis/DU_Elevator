@@ -112,6 +112,7 @@ Alioth = Planet:new(0, 0, 199718.78, vec3(-8.0000, -8.0000, -126303.0000), 12606
 ap = AutoPilot:new(false)
 ap.currentPlanet = Alioth
 ap.currentTarget = getDestination(ap.currentPlanet.center, vec3(construct.getWorldPosition()), ap.targetAltitude)
+ap.headingTarget = getHeading(vec3(construct.getWorldOrientationForward()))
 ap.positionHoldEnabled = true
 
 unit.setTimer("tickAltitude", 0.1)
