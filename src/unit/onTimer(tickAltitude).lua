@@ -46,10 +46,10 @@ if ap.enabled then
     else ap.verticalAcceleration = 10
     end
 
-    screenMain.setCenteredText("TargetAltitude: " .. ap.targetAltitude .. "/n" ..
-                               "HeightDelta: " .. heightDelta .. "/n" ..
-                               "Target Speed Up: " .. ap.verticalAcceleration .. "/n" ..
-                               "Target Speed Forward: " .. ap.lateralAcceleration .. "/n" ..
+    screenMain.setCenteredText("TargetAltitude: " .. ap.targetAltitude .. "\n" ..
+                               "HeightDelta: " .. heightDelta .. "\n" ..
+                               "Target Speed Up: " .. ap.verticalAcceleration .. "\n" ..
+                               "Target Speed Forward: " .. ap.lateralAcceleration .. "\n" ..
                                "Target Speed Left: " .. ap.longitudinalAcceleration )
 
 end
