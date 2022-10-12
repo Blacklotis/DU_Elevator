@@ -1,1 +1,1 @@
-ap.targetAltitude = 100
+ap.targetAltitude = 106
