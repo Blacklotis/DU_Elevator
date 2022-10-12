@@ -38,14 +38,13 @@ if ap.enabled then
     ap.brakeInput = false
 
     -- figure out verticalThrustSolution
-    targetHeight = 130
-    heightDelta = targetHeight - ap.currentAltitude
+    heightDelta = ap.targetAltitude - ap.currentAltitude
     if heightDelta < 0 then
         ap.verticalAcceleration = 0
         ap.brakeInput = true
-    elseif heightDelta > 100 then ap.verticalAcceleration = 20
-    elseif heightDelta > 50 then ap.verticalAcceleration = 10
-    else ap.verticalAcceleration = 5
+    elseif heightDelta > 100 then ap.verticalAcceleration = 40
+    elseif heightDelta > 50 then ap.verticalAcceleration = 20
+    else ap.verticalAcceleration = 10
     end
 
     screenMain.setCenteredText("HeightDelta: " .. heightDelta .. "/n" ..
