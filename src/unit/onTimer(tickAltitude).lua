@@ -14,7 +14,6 @@ if ap.enabled then
     ap.currentAltitude = getAltitude(ap.currentPosition, ap.currentPlanet)
     ap.currentVelocity = construct.getWorldAbsoluteVelocity()
     ap.currentAcceleration = construct.getWorldAcceleration()
-    ap.altitudePID:inject(ap.targetAltitude - ap.currentAltitude)
     ap.thrustUp = unit.getEngineThrust("thrustUp")
     ap.thrustDown = unit.getEngineThrust("thrustDown")
     ap.thrustRight = unit.getEngineThrust("thrustRight")
@@ -47,7 +46,8 @@ if ap.enabled then
     else ap.verticalAcceleration = 10
     end
 
-    screenMain.setCenteredText("HeightDelta: " .. heightDelta .. "/n" ..
+    screenMain.setCenteredText("TargetAltitude: " .. ap.targetAltitude .. "/n" ..
+                               "HeightDelta: " .. heightDelta .. "/n" ..
                                "Target Speed Up: " .. ap.verticalAcceleration .. "/n" ..
                                "Target Speed Forward: " .. ap.lateralAcceleration .. "/n" ..
                                "Target Speed Left: " .. ap.longitudinalAcceleration )
