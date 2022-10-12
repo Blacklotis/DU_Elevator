@@ -4,7 +4,7 @@
       {
         "label": "Generate Config File",
         "type": "shell",
-        "command": "./scripts/generateConfFile.ps1",
+        "command": "./scripts/GenerateConf/generateConfFile.ps1",
         "group": {
           "kind": "build",
           "isDefault": true
