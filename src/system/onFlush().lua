@@ -132,7 +132,7 @@ angularAcceleration = angularAcceleration - airAcceleration -- Try to compensate
 Nav:setEngineTorqueCommand('torque', angularAcceleration, keepCollinearity, 'airfoil', '', '', tolerancePercentToSkipOtherPriorities)
 
 -- Brakes
-if ~ap.enabled then
+if not ap.enabled then
     local brakeAcceleration = -finalBrakeInput * (brakeSpeedFactor * constructVelocity + brakeFlatFactor * constructVelocityDir)
     Nav:setEngineForceCommand('brake', brakeAcceleration)
 end

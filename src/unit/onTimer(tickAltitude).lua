@@ -32,9 +32,9 @@ if ap.enabled then
     ap.forwardInput = system.getControlDeviceForwardInput()
     ap.yawInput = system.getControlDeviceYawInput()
     ap.leftRightInput = system.getControlDeviceLeftRightInput()
-    ap.longitudinalAcceleration = 10
-    ap.lateralAcceleration = 10
-    ap.verticalAcceleration = 10
+    ap.longitudinalAcceleration = 0
+    ap.lateralAcceleration = 0
+    ap.verticalAcceleration = 0
     ap.brakeInput = false
 
     -- figure out verticalThrustSolution
@@ -49,7 +49,9 @@ if ap.enabled then
     end
 
     screenMain.setCenteredText("HeightDelta: " .. heightDelta .. "/n" ..
-                               "Target Speed: " .. ap.verticalAcceleration)
+                               "Target Speed Up: " .. ap.verticalAcceleration .. "/n" ..
+                               "Target Speed Forward: " .. ap.lateralAcceleration .. "/n" ..
+                               "Target Speed Left: " .. ap.longitudinalAcceleration )
 
 end
 
