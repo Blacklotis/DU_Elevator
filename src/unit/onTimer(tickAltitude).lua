@@ -38,7 +38,7 @@ if ap.enabled then
 
     -- figure out verticalThrustSolution
     heightDelta = ap.targetAltitude - ap.currentAltitude
-    ap.verticalAcceleration = heightDelta
+    ap.verticalAcceleration = math.min(heightDelta, 1200)
 
     screenMain.setCenteredText("TargetAltitude: " .. ap.targetAltitude .. "\n" ..
                                "HeightDelta: " .. heightDelta .. "\n" ..
