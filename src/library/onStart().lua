@@ -22,7 +22,7 @@ function AutoPilot:new(enabled)
     self.currentAltitude = 0
     self.currentTarget = vec3(0,0,0)
     self.positionHoldEnabled = false
-    self.targetAltitude = 0
+    self.targetAltitude = 200
     self.altitudePID = pid.new(0.1,0.00001,0.5)
     self.thrustUp = unit.getEngineThrust("thrustUp")
     self.thrustDown = unit.getEngineThrust("thrustDown")
