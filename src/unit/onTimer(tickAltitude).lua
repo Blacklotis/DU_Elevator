@@ -14,7 +14,6 @@ if ap.enabled then
     ap.currentAltitude = getAltitude(ap.currentPosition, ap.currentPlanet)
     ap.currentVelocity = construct.getWorldAbsoluteVelocity()
     ap.currentAcceleration = construct.getWorldAcceleration()
-    ap.altitudePID:inject(ap.targetAltitude - ap.currentAltitude)
     ap.thrustUp = unit.getEngineThrust("thrustUp")
     ap.thrustDown = unit.getEngineThrust("thrustDown")
     ap.thrustRight = unit.getEngineThrust("thrustRight")
@@ -38,19 +37,13 @@ if ap.enabled then
     ap.brakeInput = false
 
     -- figure out verticalThrustSolution
-    targetHeight = 130
-    heightDelta = targetHeight - ap.currentAltitude
-    if heightDelta < 0 then
-        ap.verticalAcceleration = 0
-        ap.brakeInput = true
-    elseif heightDelta > 100 then ap.verticalAcceleration = 20
-    elseif heightDelta > 50 then ap.verticalAcceleration = 10
-    else ap.verticalAcceleration = 5
-    end
+    heightDelta = ap.targetAltitude - ap.currentAltitude
+    ap.verticalAcceleration = heightDelta
 
-    screenMain.setCenteredText("HeightDelta: " .. heightDelta .. "/n" ..
-                               "Target Speed Up: " .. ap.verticalAcceleration .. "/n" ..
-                               "Target Speed Forward: " .. ap.lateralAcceleration .. "/n" ..
+    screenMain.setCenteredText("TargetAltitude: " .. ap.targetAltitude .. "\n" ..
+                               "HeightDelta: " .. heightDelta .. "\n" ..
+                               "Target Speed Up: " .. ap.verticalAcceleration .. "\n" ..
+                               "Target Speed Forward: " .. ap.lateralAcceleration .. "\n" ..
                                "Target Speed Left: " .. ap.longitudinalAcceleration )
 
 end

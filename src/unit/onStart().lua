@@ -111,7 +111,6 @@ Alioth = Planet:new(0, 0, 199718.78, vec3(-8.0000, -8.0000, -126303.0000), 12606
 
 ap = AutoPilot:new(false)
 ap.currentPlanet = Alioth
-ap.targetAltitude = 125
 ap.currentTarget = getDestination(ap.currentPlanet.center, vec3(construct.getWorldPosition()), ap.targetAltitude)
 ap.positionHoldEnabled = true
 

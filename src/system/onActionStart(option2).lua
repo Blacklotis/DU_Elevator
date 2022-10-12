@@ -1,0 +1,1 @@
+ap.targetAltitude = 106
