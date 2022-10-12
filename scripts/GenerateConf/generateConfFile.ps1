@@ -1,6 +1,6 @@
-$slotsFileName = "scripts\resources\confSlots.txt"
-$eventsFileName = "scripts\resources\confEvents.txt"
-$methodsFileName = "scripts\resources\confMethods.txt"
+$slotsFileName = "scripts\GenerateConf\confSlots.txt"
+$eventsFileName = "scripts\GenerateConf\confEvents.txt"
+$methodsFileName = "scripts\GenerateConf\confMethods.txt"
 $outputFileName = "Elevator.conf.json"
 $commaSpace = ", "
 
@@ -21,7 +21,8 @@ $startHandlers = "`"handlers`":["
 $startHandlers | Out-File -FilePath $outputFileName -Append
 
 $sourceDirectory = Get-Location
-$fullFileNames = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).FullName
+$sourceDirectory = $sourceDirectory.t + (Get-ChildItem -Path $sourceDirectory) -like "src"
+$fullFileNames = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).FullName 
 $directories = ((Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).Directory).BaseName
 $files = (Get-ChildItem -Path $sourceDirectory -Recurse -Include *.lua).BaseName
 $regexBetweenParens = [regex]"([^()]+)"
