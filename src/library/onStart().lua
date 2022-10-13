@@ -22,6 +22,8 @@ function AutoPilot:new(enabled)
     self.currentAltitude = 0
     self.currentVelocity = 0
     self.currentAcceleration = 0
+    self.currentPlanetPos = vec3(0,0,0)
+    self.targetPlanetPos = vec3(0,0,0)
     self.heading = 0
     self.currentTarget = vec3(0,0,0)
     self.targetHeading = 0
@@ -109,7 +111,7 @@ function getSystemPosition(currentPosition)
     return vec3(latitude, longitude, altitude)
 end
 
-local function getHeading(forward) -- code provided by tomisunlucky   
+function getHeading(forward) -- code provided by tomisunlucky   
     local up = -vec3(core.getWorldVertical())
     forward = forward - forward:project_on(up)
     local north = vec3(0, 0, 1)
