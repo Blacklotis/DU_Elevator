@@ -4,7 +4,35 @@
 if not displayInit then
     displayInit = true
     fontSize = ("2.1")
+	heightDelta = 0
 end
+
+    -- show stuffs
+    screenMain.setCenteredText("Target POS: " .. tostring(ap.targetPlanetPos) .. [[
+
+                               ]]..
+                               "Heading: " .. ap.heading  .. [[
+                                
+                               ]]..
+                               "TargetAltitude: " .. ap.targetAltitude .. [[
+                                
+                                ]]..
+                               "CurrentAltitude: " .. ap.targetAltitude .. [[
+                                
+                                ]]..
+                               "HeightDelta: " .. heightDelta .. [[
+                                
+                                ]]..
+                               "Deviation: " .. tostring(ap.currentPlanetPos - ap.targetPlanetPos) .. [[
+                                
+                                ]]..
+                               "Target Speed Up: " .. ap.verticalAcceleration .. [[
+                                
+                                ]]..
+                               "Target Speed Forward: " .. ap.longitudinalAcceleration .. [[
+                                
+                                ]]..
+                               "Target Speed Left: " .. ap.lateralAcceleration )
 
 renderScript = [[
 

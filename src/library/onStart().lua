@@ -54,6 +54,7 @@ function AutoPilot:new(enabled)
     self.keepCollinearity = 1 -- for easier reading
     self.dontKeepCollinearity = 0 -- for easier reading
     self.tolerancePercentToSkipOtherPriorities = 1 -- if we are within this tolerance (in%), we don't go to the next priorities
+    self.heightDelta = 0
     return o
 end
 
