@@ -28,7 +28,7 @@ for($i = 0; $i -lt $directories.Count; $i++)
     $funcName = $files[$i]
     if([regex]::Matches($funcName, $regexBetweenParens).Count -ge 2)
     {
-        $funcName = $funcName -join "(tag)" #Game replaces custom tags witht he word tag
+        $funcName = $funcName -join "(tag)" #Game replaces custom tags with the word tag
         $argumentValue = ("{`"value`": `"" + [regex]::Matches($funcName, $regexBetweenParens)[1] + """}")
     }   
     else {
