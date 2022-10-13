@@ -63,6 +63,7 @@ local constructVelocityDir = vec3(construct.getWorldVelocity()):normalize()
 local currentRollDeg = getRoll(worldVertical, constructForward, constructRight)
 local currentRollDegAbs = math.abs(currentRollDeg)
 local currentRollDegSign = utils.sign(currentRollDeg)
+local currentYawDeg = getHeading(construct.getWorldOrientationForward())
 
 -- Rotation
 local constructAngularVelocity = vec3(construct.getWorldAngularVelocity())

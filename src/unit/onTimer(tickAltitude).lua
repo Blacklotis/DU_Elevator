@@ -3,6 +3,7 @@
 --initalize
 if not altitudeInit then
     altitudeInit = true
+    ap.targetAltitude = 3000
     ap.currentPosition = vec3(construct.getWorldPosition())
     ap.currentAltitude = getAltitude(ap.currentPosition, ap.currentPlanet)
     ap.targetPlanetPos = getSystemPosition(ap.currentPosition) + vec3(0, 0, ap.targetAltitude - ap.currentAltitude)
@@ -41,14 +42,14 @@ if ap.enabled then
 
     -- figure out verticalThrustSolution, right now, just thrust at your height delta, works fine lol
     heightDelta = ap.targetAltitude - ap.currentAltitude
-    lateralDelta = ap.targetPlanetPos.x - ap.currentPlanetPos.x
-    longitudinalDelta = ap.targetPlanetPos.y - ap.currentPlanetPos.y
+    lateralDelta = ap.targetPlanetPos.y - ap.currentPlanetPos.y
+    longitudinalDelta = ap.targetPlanetPos.x - ap.currentPlanetPos.x
     rotationDelta = ap.heading - ap.targetHeading
 
     -- clamp speed limits
     ap.verticalAcceleration = math.min(heightDelta, 1200)
-    ap.lateralAcceleration = math.min(lateralDelta, 10)
-    ap.longitudinalAcceleration = math.min(longitudinalDelta, 10)
+    ap.lateralAcceleration = math.min(lateralDelta*10000, 10)
+    ap.longitudinalAcceleration = math.min(longitudinalDelta*10000, 10)
 
     -- show stuffs
     screenMain.setCenteredText("Current POS: " .. tostring(ap.currentPlanetPos) .. "\n" ..
