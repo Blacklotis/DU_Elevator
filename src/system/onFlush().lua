@@ -83,9 +83,9 @@ if planetInfluence > 0
 then
     -- stabilize orientation along the gravity, and yaw along starting yaw
     if (rollPID == nil) then
-        rollPID = pid.new(0.2, 0, 10)
-        pitchPID = pid.new(0.2, 0, 10)
-        yawPID = pid.new(0.02, 0, 2)
+        rollPID = pid.new(0.1, 0, 2)
+        pitchPID = pid.new(0.1, 0, 2)
+        yawPID = pid.new(0.001, 0, .1)
     end
 
     if currentYawDeg < 180 then

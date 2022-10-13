@@ -7,32 +7,35 @@ if not displayInit then
 	heightDelta = 0
 end
 
-    -- show stuffs
-    screenMain.setCenteredText("Target POS: " .. tostring(ap.targetPlanetPos) .. [[
+-- show stuffs
+screenMain.setCenteredText(
+    "World POS: " .. tostring(ap.currentPosition) .. [[
+    ]]..
+    "Target POS: " .. testAlt .. [[
 
-                               ]]..
-                               "Heading: " .. ap.heading  .. [[
-                                
-                               ]]..
-                               "TargetAltitude: " .. ap.targetAltitude .. [[
-                                
-                                ]]..
-                               "CurrentAltitude: " .. ap.targetAltitude .. [[
-                                
-                                ]]..
-                               "HeightDelta: " .. heightDelta .. [[
-                                
-                                ]]..
-                               "Deviation: " .. tostring(ap.currentPlanetPos - ap.targetPlanetPos) .. [[
-                                
-                                ]]..
-                               "Target Speed Up: " .. ap.verticalAcceleration .. [[
-                                
-                                ]]..
-                               "Target Speed Forward: " .. ap.longitudinalAcceleration .. [[
-                                
-                                ]]..
-                               "Target Speed Left: " .. ap.lateralAcceleration )
+    ]]..
+    "Heading: " .. ap.heading  .. [[
+
+    ]]..
+    "TargetAltitude: " .. ap.targetAltitude .. [[
+
+    ]]..
+    "CurrentAltitude: " .. ap.currentAltitude .. [[
+
+    ]]..
+    "HeightDelta: " .. heightDelta .. [[
+
+    ]]..
+    "Deviation: " .. tostring(ap.currentPlanetPos - ap.targetPlanetPos) .. [[
+
+    ]]..
+    "Target Speed Up: " .. ap.verticalAcceleration .. [[
+
+    ]]..
+    "Target Speed Forward: " .. ap.longitudinalAcceleration .. [[
+
+    ]]..
+    "Target Speed Left: " .. ap.lateralAcceleration )
 
 renderScript = [[
 

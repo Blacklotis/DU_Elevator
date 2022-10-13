@@ -3,13 +3,15 @@
 --initalize
 if not altitudeInit then
     altitudeInit = true
-    ap.targetAltitude = 3000
+    ap.targetAltitude = 7000
     ap.currentPosition = vec3(construct.getWorldPosition())
     ap.currentAltitude = getAltitude(ap.currentPosition, ap.currentPlanet)
     ap.targetPlanetPos = getSystemPosition(ap.currentPosition) + vec3(0, 0, ap.targetAltitude - ap.currentAltitude)
     verticalThrustSolution = vec3(0,0,0)
 end
-
+testAlt = 0
+testDest = 0
+testVector = 0
 -- only do calculations when ap is on
 if ap.enabled then
     ap.currentPosition = vec3(construct.getWorldPosition())
@@ -41,14 +43,21 @@ if ap.enabled then
     ap.brakeInput = brakeInput
 
     -- figure out verticalThrustSolution, right now, just thrust at your height delta, works fine lol
+    local goingUp = ap.currentAltitude < ap.targetAltitude
     heightDelta = ap.targetAltitude - ap.currentAltitude
-    lateralDelta = ap.targetPlanetPos.x - ap.currentPlanetPos.x
-    longitudinalDelta = ap.targetPlanetPos.y - ap.currentPlanetPos.y
+    lateralDelta = ap.targetPlanetPos.y - ap.currentPlanetPos.y
+    longitudinalDelta = ap.targetPlanetPos.x - ap.currentPlanetPos.x
     rotationDelta = ap.heading - ap.targetHeading
 
+    --testAlt =   vec3().dist(Alioth.center, ap.currentPosition) - Alioth.radius
+    --testDest = ((ap.currentPosition - Alioth.center).normalize_inplace() * 1000) + ap.currentPosition
+    --testVector = testDest - ap.currentPosition
+
     -- clamp speed limits
-    ap.verticalAcceleration = math.min(heightDelta, 1200)
-    ap.lateralAcceleration = math.min(lateralDelta*10000, 10)
-    ap.longitudinalAcceleration = math.min(longitudinalDelta*10000, 10)
+    ap.verticalAcceleration = utils.clamp(heightDelta, -1200, 1200)
+    ap.lateralAcceleration = math.min(lateralDelta*100000, 10)
+    ap.longitudinalAcceleration = math.min(longitudinalDelta*100000, 10)
+    if (not goingUp) and (ap.currentAltitude < 1000) then ap.verticalAcceleration = utils.clamp(heightDelta, -200, 200) end
 
 end
+
