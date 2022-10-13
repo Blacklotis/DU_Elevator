@@ -96,7 +96,7 @@ function getSystemPositionString(currentPosition)
     local phi = math.atan(coords.y, coords.x)
     longitude = phi >= 0 and phi or (2 * math.pi + phi)
     latitude = math.pi / 2 - math.acos(coords.z / distance)
-    return "::pos{0,2,"..math.deg(latitude)..","..math.deg(longitude)..","..altitude.."}"
+    return ("::pos{0,2,"..math.deg(latitude)..","..math.deg(longitude)..","..altitude.."}")
 end
 
 function getSystemPosition(currentPosition)

@@ -143,11 +143,6 @@ else
     Nav:setEngineForceCommand(longitudinalEngineTags, longitudinalAcceleration, keepCollinearity)
 end
 
-if (Nav.axisCommandManager:getCurrentToTargetDeltaSpeed(axisCommandId.longitudinal) < - Nav.axisCommandManager:getTargetSpeedCurrentStep(axisCommandId.longitudinal) * 0.5) -- if the longitudinal velocity would need some braking
-then
-    autoNavigationUseBrake = true
-end
-
 -- Lateral Translation
 local lateralStrafeEngineTags = 'thrust analog lateral'
 local lateralCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.lateral)

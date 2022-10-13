@@ -52,15 +52,30 @@ if ap.enabled then
     ap.longitudinalAcceleration = math.min(longitudinalDelta*10000, 10)
 
     -- show stuffs
-    screenMain.setCenteredText("Current POS: " .. tostring(ap.currentPlanetPos) .. "\n" ..
-                               "Target POS: " .. tostring(ap.targetPlanetPos) .. "\n" ..
-                               "Heading: " .. ap.heading .. "\n" .. 
-                               "TargetAltitude: " .. ap.targetAltitude .. "m\n" ..
-                               "CurrentAltitude: " .. ap.targetAltitude .. "m\n" ..
-                               "HeightDelta: " .. heightDelta .. "m\n" ..
-                               "Deviation: " .. tostring(ap.currentPlanetPos - ap.targetPlanetPos) .. "\n" ..
-                               "Target Speed Up: " .. ap.verticalAcceleration .. "\n" ..
-                               "Target Speed Forward: " .. ap.longitudinalAcceleration .. "\n" ..
+    screenMain.setCenteredText("Target POS: " .. tostring(ap.targetPlanetPos) .. [[
+
+                               ]]..
+                               "Heading: " .. ap.heading  .. [[
+                                
+                               ]]..
+                               "TargetAltitude: " .. ap.targetAltitude .. [[
+                                
+                                ]]..
+                               "CurrentAltitude: " .. ap.targetAltitude .. [[
+                                
+                                ]]..
+                               "HeightDelta: " .. heightDelta .. [[
+                                
+                                ]]..
+                               "Deviation: " .. tostring(ap.currentPlanetPos - ap.targetPlanetPos) .. [[
+                                
+                                ]]..
+                               "Target Speed Up: " .. ap.verticalAcceleration .. [[
+                                
+                                ]]..
+                               "Target Speed Forward: " .. ap.longitudinalAcceleration .. [[
+                                
+                                ]]..
                                "Target Speed Left: " .. ap.lateralAcceleration )
 
 end
