@@ -85,7 +85,7 @@ then
     if (rollPID == nil) then
         rollPID = pid.new(0.2, 0, 10)
         pitchPID = pid.new(0.2, 0, 10)
-        yawPID = pid.new(0.2, 0, 10)
+        yawPID = pid.new(0.02, 0, 2)
     end
 
     if currentYawDeg < 180 then
@@ -130,46 +130,39 @@ local autoNavigationUseBrake = false
 -- Longitudinal Translation
 local longitudinalEngineTags = 'thrust analog longitudinal'
 local longitudinalCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.longitudinal)
-local longitudinalAcceleration = 0
-
 if ap.enabled
 then
     Nav.axisCommandManager:setTargetSpeedCommand(axisCommandId.longitudinal, ap.longitudinalAcceleration)
-    longitudinalAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.longitudinal)
+    autoNavigationAcceleration = autoNavigationAcceleration + Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.longitudinal)
     autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. longitudinalEngineTags
-    autoNavigationAcceleration = autoNavigationAcceleration + longitudinalAcceleration
 else
-    longitudinalAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(longitudinalEngineTags,axisCommandId.longitudinal)
+    local longitudinalAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(longitudinalEngineTags,axisCommandId.longitudinal)
     Nav:setEngineForceCommand(longitudinalEngineTags, longitudinalAcceleration, keepCollinearity)
 end
 
 -- Lateral Translation
 local lateralStrafeEngineTags = 'thrust analog lateral'
 local lateralCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.lateral)
-local lateralStrafeAcceleration = 0
 if ap.enabled
 then
     Nav.axisCommandManager:setTargetSpeedCommand(axisCommandId.lateral, ap.lateralAcceleration)
     autoNavigationAcceleration = autoNavigationAcceleration + Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.lateral)
     autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. lateralStrafeEngineTags
 else
-    lateralStrafeAcceleration =  Nav.axisCommandManager:composeAxisAccelerationFromThrottle(lateralStrafeEngineTags,axisCommandId.lateral)
+    local lateralStrafeAcceleration =  Nav.axisCommandManager:composeAxisAccelerationFromThrottle(lateralStrafeEngineTags,axisCommandId.lateral)
     Nav:setEngineForceCommand(lateralStrafeEngineTags, lateralStrafeAcceleration, keepCollinearity)
 end
 
 -- Vertical Translation
 local verticalStrafeEngineTags = 'thrust analog vertical'
 local verticalCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.vertical)
-local verticalStrafeAcceleration = 0
-
 if ap.enabled
 then
     Nav.axisCommandManager:setTargetSpeedCommand(axisCommandId.vertical, ap.verticalAcceleration)
-    verticalStrafeAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.vertical)
     autoNavigationAcceleration = autoNavigationAcceleration + Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.vertical)
     autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. verticalStrafeEngineTags
 else
-    verticalStrafeAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(verticalStrafeEngineTags,axisCommandId.vertical)
+    local verticalStrafeAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(verticalStrafeEngineTags,axisCommandId.vertical)
     Nav:setEngineForceCommand(verticalStrafeEngineTags, verticalStrafeAcceleration, keepCollinearity, 'airfoil', 'ground', '', tolerancePercentToSkipOtherPriorities)
 end
 
