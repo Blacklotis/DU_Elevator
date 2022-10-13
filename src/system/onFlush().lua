@@ -88,15 +88,23 @@ then
         yawPID = pid.new(0.2, 0, 10)
     end
 
+    if currentYawDeg < 180 then
+        yawDelta = currentYawDeg - 360
+    else
+        yawDelta = currentYawDeg
+    end
+
     rollPID:inject(-currentRollDeg)
     pitchPID:inject(-currentPitchDeg)
-    yawPID:inject(-currentYawDeg)
+    yawPID:inject(-yawDelta)
     angularAcceleration = rollPID:get() * worldForward + pitchPID:get() * worldRight + yawPID:get() * worldUp
 else
     -- cancel rotation
     local worldAngularVelocity = vec3(construct.getWorldAngularVelocity())
     angularAcceleration = - power * worldAngularVelocity
 end
+
+Nav:setEngineTorqueCommand('torque', angularAcceleration, keepCollinearity, 'airfoil', '', '', tolerancePercentToSkipOtherPriorities)
 
 -- Engine commands
 local keepCollinearity = 1 -- for easier reading
@@ -109,12 +117,6 @@ then
     dontKeepCollinearity = ap.dontKeepCollinearity
     tolerancePercentToSkipOtherPriorities = ap.tolerancePercentToSkipOtherPriorities
 end
-
--- Rotation
-local angularAcceleration = torqueFactor * (targetAngularVelocity - constructAngularVelocity)
-local airAcceleration = vec3(construct.getWorldAirFrictionAngularAcceleration())
-angularAcceleration = angularAcceleration - airAcceleration -- Try to compensate air friction
-Nav:setEngineTorqueCommand('torque', angularAcceleration, keepCollinearity, 'airfoil', '', '', tolerancePercentToSkipOtherPriorities)
 
 -- Brakes
 local brakeAcceleration = -finalBrakeInput * (brakeSpeedFactor * constructVelocity + brakeFlatFactor * constructVelocityDir)
