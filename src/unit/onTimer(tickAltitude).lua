@@ -42,8 +42,8 @@ if ap.enabled then
 
     -- figure out verticalThrustSolution, right now, just thrust at your height delta, works fine lol
     heightDelta = ap.targetAltitude - ap.currentAltitude
-    lateralDelta = ap.targetPlanetPos.y - ap.currentPlanetPos.y
-    longitudinalDelta = ap.targetPlanetPos.x - ap.currentPlanetPos.x
+    lateralDelta = ap.targetPlanetPos.x - ap.currentPlanetPos.x
+    longitudinalDelta = ap.targetPlanetPos.y - ap.currentPlanetPos.y
     rotationDelta = ap.heading - ap.targetHeading
 
     -- clamp speed limits
@@ -60,8 +60,8 @@ if ap.enabled then
                                "HeightDelta: " .. heightDelta .. "m\n" ..
                                "Deviation: " .. tostring(ap.currentPlanetPos - ap.targetPlanetPos) .. "\n" ..
                                "Target Speed Up: " .. ap.verticalAcceleration .. "\n" ..
-                               "Target Speed Forward: " .. ap.lateralAcceleration .. "\n" ..
-                               "Target Speed Left: " .. ap.longitudinalAcceleration )
+                               "Target Speed Forward: " .. ap.longitudinalAcceleration .. "\n" ..
+                               "Target Speed Left: " .. ap.lateralAcceleration )
 
 end
 

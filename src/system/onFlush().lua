@@ -55,6 +55,10 @@ end
 
 -- Axis
 local worldVertical = vec3(core.getWorldVertical()) -- along gravity
+local worldUp = vec3(construct.getWorldOrientationUp())
+local worldForward = vec3(construct.getWorldOrientationForward())
+local worldRight = vec3(construct.getWorldOrientationRight())
+local worldVertical = vec3(core.getWorldVertical())
 local constructUp = vec3(construct.getWorldOrientationUp())
 local constructForward = vec3(construct.getWorldOrientationForward())
 local constructRight = vec3(construct.getWorldOrientationRight())
@@ -63,7 +67,8 @@ local constructVelocityDir = vec3(construct.getWorldVelocity()):normalize()
 local currentRollDeg = getRoll(worldVertical, constructForward, constructRight)
 local currentRollDegAbs = math.abs(currentRollDeg)
 local currentRollDegSign = utils.sign(currentRollDeg)
-local currentYawDeg = getHeading(construct.getWorldOrientationForward())
+local currentYawDeg = getHeading(vec3(construct.getWorldOrientationForward()))
+local currentPitchDeg = -math.asin(worldForward:dot(worldVertical)) * constants.rad2deg
 
 -- Rotation
 local constructAngularVelocity = vec3(construct.getWorldAngularVelocity())
@@ -72,44 +77,25 @@ local targetAngularVelocity = finalPitchInput * pitchSpeedFactor * constructRigh
                                 + finalYawInput * yawSpeedFactor * constructUp
 
 
--- In atmosphere?
-if worldVertical:len() > 0.01 and unit.getAtmosphereDensity() > 0.0 then
-    local autoRollRollThreshold = 1.0
-    -- autoRoll on AND currentRollDeg is big enough AND player is not rolling
-    if autoRoll == true and currentRollDegAbs > autoRollRollThreshold and finalRollInput == 0 then
-        local targetRollDeg = utils.clamp(0,currentRollDegAbs-30, currentRollDegAbs+30);  -- we go back to 0 within a certain limit
-        if (rollPID == nil) then
-            rollPID = pid.new(autoRollFactor * 0.01, 0, autoRollFactor * 0.1) -- magic number tweaked to have a default factor in the 1-10 range
-        end
-        rollPID:inject(targetRollDeg - currentRollDeg)
-        local autoRollInput = rollPID:get()
-
-        targetAngularVelocity = targetAngularVelocity + autoRollInput * constructForward
+-- are we in deep space or are we near a planet ?
+local planetInfluence = unit.getClosestPlanetInfluence()
+if planetInfluence > 0
+then
+    -- stabilize orientation along the gravity, and yaw along starting yaw
+    if (rollPID == nil) then
+        rollPID = pid.new(0.2, 0, 10)
+        pitchPID = pid.new(0.2, 0, 10)
+        yawPID = pid.new(0.2, 0, 10)
     end
-    local turnAssistRollThreshold = 20.0
-    -- turnAssist AND currentRollDeg is big enough AND player is not pitching or yawing
-    if turnAssist == true and currentRollDegAbs > turnAssistRollThreshold and finalPitchInput == 0 and finalYawInput == 0 then
-        local rollToPitchFactor = turnAssistFactor * 0.1 -- magic number tweaked to have a default factor in the 1-10 range
-        local rollToYawFactor = turnAssistFactor * 0.025 -- magic number tweaked to have a default factor in the 1-10 range
 
-        -- rescale (turnAssistRollThreshold -> 180) to (0 -> 180)
-        local rescaleRollDegAbs = ((currentRollDegAbs - turnAssistRollThreshold) / (180 - turnAssistRollThreshold)) * 180
-        local rollVerticalRatio = 0
-        if rescaleRollDegAbs < 90 then
-            rollVerticalRatio = rescaleRollDegAbs / 90
-        elseif rescaleRollDegAbs < 180 then
-            rollVerticalRatio = (180 - rescaleRollDegAbs) / 90
-        end
-
-        rollVerticalRatio = rollVerticalRatio * rollVerticalRatio
-
-        local turnAssistYawInput = - currentRollDegSign * rollToYawFactor * (1.0 - rollVerticalRatio)
-        local turnAssistPitchInput = rollToPitchFactor * rollVerticalRatio
-
-        targetAngularVelocity = targetAngularVelocity
-                            + turnAssistPitchInput * constructRight
-                            + turnAssistYawInput * constructUp
-    end
+    rollPID:inject(-currentRollDeg)
+    pitchPID:inject(-currentPitchDeg)
+    yawPID:inject(-currentYawDeg)
+    angularAcceleration = rollPID:get() * worldForward + pitchPID:get() * worldRight + yawPID:get() * worldUp
+else
+    -- cancel rotation
+    local worldAngularVelocity = vec3(construct.getWorldAngularVelocity())
+    angularAcceleration = - power * worldAngularVelocity
 end
 
 -- Engine commands
