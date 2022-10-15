@@ -109,7 +109,7 @@ function getSystemPosition(currentPosition)
     local phi = math.atan(coords.y, coords.x)
     longitude = phi >= 0 and phi or (2 * math.pi + phi)
     latitude = math.pi / 2 - math.acos(coords.z / distance)
-    return vec3(latitude, longitude, altitude)
+    return vec3(math.deg(latitude), math.deg(longitude), altitude)
 end
 
 function getHeading(forward) -- code provided by tomisunlucky   
@@ -123,4 +123,14 @@ function getHeading(forward) -- code provided by tomisunlucky
         angle = 360-angle
     end
     return angle
+end
+
+function latToMeters(planetId, lat, altitude)
+
+
+end
+
+function lonToMeters(planetId, lat, altitude)
+
+
 end

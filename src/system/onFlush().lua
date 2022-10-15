@@ -85,7 +85,7 @@ then
     if (rollPID == nil) then
         rollPID = pid.new(0.1, 0, 2)
         pitchPID = pid.new(0.1, 0, 2)
-        yawPID = pid.new(0.001, 0, .1)
+        yawPID = pid.new(0.001, 0, 0)
     end
 
     if currentYawDeg < 180 then

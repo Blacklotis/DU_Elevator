@@ -7,7 +7,6 @@ if not altitudeInit then
     ap.currentPosition = vec3(construct.getWorldPosition())
     ap.currentAltitude = getAltitude(ap.currentPosition, ap.currentPlanet)
     ap.targetPlanetPos = getSystemPosition(ap.currentPosition) + vec3(0, 0, ap.targetAltitude - ap.currentAltitude)
-    verticalThrustSolution = vec3(0,0,0)
 end
 testAlt = 0
 testDest = 0
@@ -51,13 +50,15 @@ if ap.enabled then
 
     --testAlt =   vec3().dist(Alioth.center, ap.currentPosition) - Alioth.radius
     --testDest = ((ap.currentPosition - Alioth.center).normalize_inplace() * 1000) + ap.currentPosition
-    --testVector = testDest - ap.currentPosition
+    --testVector = ((ap.currentPosition - Alioth.center).normalize_inplace()) / vec3(1,1,1).normalize_inplace()
+    --testAlt = testVector * vec3(0,0,1000)
 
     -- clamp speed limits
     ap.verticalAcceleration = utils.clamp(heightDelta, -1200, 1200)
-    ap.lateralAcceleration = math.min(lateralDelta*100000, 10)
-    ap.longitudinalAcceleration = math.min(longitudinalDelta*100000, 10)
-    if (not goingUp) and (ap.currentAltitude < 1000) then ap.verticalAcceleration = utils.clamp(heightDelta, -200, 200) end
+    ap.lateralAcceleration = math.min(lateralDelta*10000, 10)
+    ap.longitudinalAcceleration = math.min(longitudinalDelta*10000, 10)
+    
+    if math.abs(heightDelta) < 1000 then ap.verticalAcceleration = utils.clamp(heightDelta, -200, 200) end
 
 end
 

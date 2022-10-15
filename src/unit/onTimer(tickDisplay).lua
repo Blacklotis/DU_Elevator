@@ -9,9 +9,9 @@ end
 
 -- show stuffs
 screenMain.setCenteredText(
-    "World POS: " .. tostring(ap.currentPosition) .. [[
+    "World POS: " .. tostring(testDest) .. [[
     ]]..
-    "Target POS: " .. testAlt .. [[
+    "Target POS: " ..tostring( testAlt ).. [[
 
     ]]..
     "Heading: " .. ap.heading  .. [[
