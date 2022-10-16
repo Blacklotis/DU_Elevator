@@ -54,7 +54,6 @@ function AutoPilot:new(enabled)
     self.keepCollinearity = 1 -- for easier reading
     self.dontKeepCollinearity = 0 -- for easier reading
     self.tolerancePercentToSkipOtherPriorities = 1 -- if we are within this tolerance (in%), we don't go to the next priorities
-    self.heightDelta = 0
     return o
 end
 
@@ -97,7 +96,7 @@ function getSystemPositionString(currentPosition)
     local phi = math.atan(coords.y, coords.x)
     longitude = phi >= 0 and phi or (2 * math.pi + phi)
     latitude = math.pi / 2 - math.acos(coords.z / distance)
-    return ("::pos{0,2,"..math.deg(latitude)..","..math.deg(longitude)..","..altitude.."}")
+    return "::pos{0,2,"..math.deg(latitude)..","..math.deg(longitude)..","..altitude.."}"
 end
 
 function getSystemPosition(currentPosition)
@@ -109,7 +108,7 @@ function getSystemPosition(currentPosition)
     local phi = math.atan(coords.y, coords.x)
     longitude = phi >= 0 and phi or (2 * math.pi + phi)
     latitude = math.pi / 2 - math.acos(coords.z / distance)
-    return vec3(math.deg(latitude), math.deg(longitude), altitude)
+    return vec3(latitude, longitude, altitude)
 end
 
 function getHeading(forward) -- code provided by tomisunlucky   
@@ -123,14 +122,4 @@ function getHeading(forward) -- code provided by tomisunlucky
         angle = 360-angle
     end
     return angle
-end
-
-function latToMeters(planetId, lat, altitude)
-
-
-end
-
-function lonToMeters(planetId, lat, altitude)
-
-
 end

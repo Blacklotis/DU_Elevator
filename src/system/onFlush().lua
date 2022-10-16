@@ -16,6 +16,11 @@ local finalRollInput = 0
 local finalYawInput = 0
 local finalBrakeInput =  brakeInput
 
+if not initFlush then 
+    Nav.axisCommandManager:setMasterMode(1) 
+    initFlush = true
+end
+
 -- validate params
 if ap.enabled
 then
@@ -85,7 +90,7 @@ then
     if (rollPID == nil) then
         rollPID = pid.new(0.1, 0, 2)
         pitchPID = pid.new(0.1, 0, 2)
-        yawPID = pid.new(0.001, 0, 0)
+        yawPID = pid.new(0.1, 0, 2)
     end
 
     if currentYawDeg < 180 then
@@ -178,3 +183,4 @@ end
 
 -- Rockets
 Nav:setBoosterCommand('rocket_engine')
+

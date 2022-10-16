@@ -3,10 +3,12 @@
 --initalize
 if not altitudeInit then
     altitudeInit = true
-    ap.targetAltitude = 7000
+    ap.targetAltitude = 1000
+    homePosition = vec3(-30896.334,101852.420,-58548.278)
+    homeAltitude = getAltitude(homePosition, ap.currentPlanet)
     ap.currentPosition = vec3(construct.getWorldPosition())
     ap.currentAltitude = getAltitude(ap.currentPosition, ap.currentPlanet)
-    ap.targetPlanetPos = getSystemPosition(ap.currentPosition) + vec3(0, 0, ap.targetAltitude - ap.currentAltitude)
+    ap.targetPlanetPos = getSystemPosition(homePosition) + vec3(0, 0, ap.targetAltitude - ap.currentAltitude)
 end
 testAlt = 0
 testDest = 0
@@ -49,16 +51,17 @@ if ap.enabled then
     rotationDelta = ap.heading - ap.targetHeading
 
     --testAlt =   vec3().dist(Alioth.center, ap.currentPosition) - Alioth.radius
-    --testDest = ((ap.currentPosition - Alioth.center).normalize_inplace() * 1000) + ap.currentPosition
+    testDest = ((ap.currentPosition - Alioth.center):normalize_inplace() * 1000) + homePosition
     --testVector = ((ap.currentPosition - Alioth.center).normalize_inplace()) / vec3(1,1,1).normalize_inplace()
     --testAlt = testVector * vec3(0,0,1000)
 
     -- clamp speed limits
     ap.verticalAcceleration = utils.clamp(heightDelta, -1200, 1200)
-    ap.lateralAcceleration = math.min(lateralDelta*10000, 10)
-    ap.longitudinalAcceleration = math.min(longitudinalDelta*10000, 10)
+    ap.lateralAcceleration = utils.clamp(lateralDelta*10000000, -10, 10)
+    ap.longitudinalAcceleration = utils.clamp(longitudinalDelta*10000000, -10, 10)
     
     if math.abs(heightDelta) < 1000 then ap.verticalAcceleration = utils.clamp(heightDelta, -200, 200) end
 
 end
+
 

@@ -9,11 +9,22 @@ end
 
 -- show stuffs
 screenMain.setCenteredText(
-    "World POS: " .. tostring(testDest) .. [[
+    "World POS: " .. tostring(ap.currentPosition) .. [[
+    
     ]]..
-    "Target POS: " ..tostring( testAlt ).. [[
+    "Target POS: " .. tostring(testDest) .. [[
 
     ]]..
+    "Thrust Vector: " .. tostring((ap.currentPosition - testDest):normalize_inplace()) .. [[
+
+    ]]..
+    "World Vertical: " .. tostring(vec3(core.getWorldVertical())) .. [[
+
+    ]]..
+        "Dev1: " .. (ap.currentPosition - ((homePosition - Alioth.center):normalize_inplace() * (ap.currentAltitude - homeAltitude) + homePosition)):len() .. [[
+
+    ]]..
+    
     "Heading: " .. ap.heading  .. [[
 
     ]]..
