@@ -15,6 +15,7 @@ function getRoll(gravityDirection, forward, right)
     return roll
 end
 
+
 -- give the axis and angle of the rotation that transforms oldDir into newDir
 -- returns the angle and the axis of rotation
 -- If oldDir and newDir are colinear, preferredAxis is returned as the zero rotation axis

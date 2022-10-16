@@ -1,65 +1,48 @@
--- constants: use 'myvar = defaultValue --export: description' to expose the variable in context menu
 
-local pitchSpeedFactor = 0.8 --export: This factor will increase/decrease the player input along the pitch axis<br>(higher value may be unstable)<br>Valid values: Superior or equal to 0.01
-local yawSpeedFactor =  1 --export: This factor will increase/decrease the player input along the yaw axis<br>(higher value may be unstable)<br>Valid values: Superior or equal to 0.01
-local rollSpeedFactor = 1.5 --export: This factor will increase/decrease the player input along the roll axis<br>(higher value may be unstable)<br>Valid values: Superior or equal to 0.01
-local brakeSpeedFactor = 3 --export: When braking, this factor will increase the brake force by brakeSpeedFactor * velocity<br>Valid values: Superior or equal to 0.01
-local brakeFlatFactor = 1 --export: When braking, this factor will increase the brake force by a flat brakeFlatFactor * velocity direction><br>(higher value may be unstable)<br>Valid values: Superior or equal to 0.01
-local autoRoll = false --export: [Only in atmosphere]<br>When the pilot stops rolling,  flight model will try to get back to horizontal (no roll)
-local autoRollFactor = 2 --export: [Only in atmosphere]<br>When autoRoll is engaged, this factor will increase to strength of the roll back to 0<br>Valid values: Superior or equal to 0.01
-local turnAssist = true --export: [Only in atmosphere]<br>When the pilot is rolling, the flight model will try to add yaw and pitch to make the construct turn better<br>The flight model will start by adding more yaw the more horizontal the construct is and more pitch the more vertical it is
-local turnAssistFactor = 2 --export: [Only in atmosphere]<br>This factor will increase/decrease the turnAssist effect<br>(higher value may be unstable)<br>Valid values: Superior or equal to 0.01
-local torqueFactor = 2 -- Force factor applied to reach rotationSpeed<br>(higher value may be unstable)<br>Valid values: Superior or equal to 0.01
+local pitchSpeedFactor = 0.8 
+local yawSpeedFactor =  1 
+local rollSpeedFactor = 1.5 
+local brakeSpeedFactor = 3 
+local brakeFlatFactor = 1 
+local autoRoll = false 
+local autoRollFactor = 2 
+local turnAssist = true 
+local turnAssistFactor = 2 
+local torqueFactor = 2 
 
 local finalPitchInput = 0
 local finalRollInput = 0
 local finalYawInput = 0
 local finalBrakeInput =  brakeInput
 
--- validate params
-if ap.enabled
-then
-    pitchSpeedFactor = math.max(ap.pitchSpeedFactor, 0.01)
-    yawSpeedFactor = math.max(ap.yawSpeedFactor, 0.01)
-    rollSpeedFactor = math.max(ap.rollSpeedFactor, 0.01)
-    torqueFactor = math.max(ap.torqueFactor, 0.01)
-    brakeSpeedFactor = math.max(ap.brakeSpeedFactor, 0.01)
-    brakeFlatFactor = math.max(ap.brakeFlatFactor, 0.01)
-    autoRollFactor = math.max(ap.autoRollFactor, 0.01)
-    turnAssistFactor = math.max(ap.turnAssistFactor, 0.01)
-else
-    pitchSpeedFactor = math.max(pitchSpeedFactor, 0.01)
-    yawSpeedFactor = math.max(yawSpeedFactor, 0.01)
-    rollSpeedFactor = math.max(rollSpeedFactor, 0.01)
-    torqueFactor = math.max(torqueFactor, 0.01)
-    brakeSpeedFactor = math.max(brakeSpeedFactor, 0.01)
-    brakeFlatFactor = math.max(brakeFlatFactor, 0.01)
-    autoRollFactor = math.max(autoRollFactor, 0.01)
-    turnAssistFactor = math.max(turnAssistFactor, 0.01)
+local inspace = 0
+if (unit.getAtmosphereDensity() <= constants.epsilon) then
+    inspace = 1
 end
 
--- final inputs
-if ap.enabled
-then
-    finalPitchInput = pitchInput + ap.forwardInput
-    finalRollInput = rollInput + ap.yawInput
-    finalYawInput = yawInput - ap.leftRightInput
-    finalBrakeInput =  brakeInput
-else
-    finalPitchInput = pitchInput + system.getControlDeviceForwardInput()
-    finalRollInput = rollInput + system.getControlDeviceYawInput()
-    finalYawInput = yawInput - system.getControlDeviceLeftRightInput()
-    finalBrakeInput = brakeInput
+local worldGravity = vec3(self.core.getWorldGravity())
+local gravityDot = worldGravity:dot(axisWorldDirection)
+if utils.sign(ap.thrustVector.x) == utils.sign(gravityDot) then
+    else
+        accelerationFromGravity = -vec3(self.core.getWorldGravity())
 end
 
+pitchSpeedFactor = math.max(pitchSpeedFactor, 0.01)
+yawSpeedFactor = math.max(yawSpeedFactor, 0.01)
+rollSpeedFactor = math.max(rollSpeedFactor, 0.01)
+torqueFactor = math.max(torqueFactor, 0.01)
+brakeSpeedFactor = math.max(brakeSpeedFactor, 0.01)
+brakeFlatFactor = math.max(brakeFlatFactor, 0.01)
+autoRollFactor = math.max(autoRollFactor, 0.01)
+turnAssistFactor = math.max(turnAssistFactor, 0.01)
 
--- Axis
-local worldVertical = vec3(core.getWorldVertical()) -- along gravity
-local worldUp = vec3(construct.getWorldOrientationUp())
-local worldForward = vec3(construct.getWorldOrientationForward())
-local worldRight = vec3(construct.getWorldOrientationRight())
-local worldVertical = vec3(core.getWorldVertical())
-local constructUp = vec3(construct.getWorldOrientationUp())
+local finalPitchInput = pitchInput + system.getControlDeviceForwardInput()
+local finalRollInput = rollInput + system.getControlDeviceYawInput()
+local finalYawInput = yawInput - system.getControlDeviceLeftRightInput()
+local finalBrakeInput = brakeInput
+
+
+local worldVertical = vec3(core.getWorldVertical()) local constructUp = vec3(construct.getWorldOrientationUp())
 local constructForward = vec3(construct.getWorldOrientationForward())
 local constructRight = vec3(construct.getWorldOrientationRight())
 local constructVelocity = vec3(construct.getWorldVelocity())
@@ -67,50 +50,46 @@ local constructVelocityDir = vec3(construct.getWorldVelocity()):normalize()
 local currentRollDeg = getRoll(worldVertical, constructForward, constructRight)
 local currentRollDegAbs = math.abs(currentRollDeg)
 local currentRollDegSign = utils.sign(currentRollDeg)
-local currentYawDeg = getHeading(vec3(construct.getWorldOrientationForward()))
-local currentPitchDeg = -math.asin(worldForward:dot(worldVertical)) * constants.rad2deg
 
--- Rotation
 local constructAngularVelocity = vec3(construct.getWorldAngularVelocity())
 local targetAngularVelocity = finalPitchInput * pitchSpeedFactor * constructRight
                                 + finalRollInput * rollSpeedFactor * constructForward
                                 + finalYawInput * yawSpeedFactor * constructUp
 
+if worldVertical:len() > 0.01 and unit.getAtmosphereDensity() > 0.0 then
+    local autoRollRollThreshold = 1.0
+        if autoRoll == true and currentRollDegAbs > autoRollRollThreshold and finalRollInput == 0 then
+        local targetRollDeg = utils.clamp(0,currentRollDegAbs-30, currentRollDegAbs+30)
+            if (rollPID == nil) then
+            rollPID = pid.new(autoRollFactor * 0.01, 0, autoRollFactor * 0.1)         end
+        rollPID:inject(targetRollDeg - currentRollDeg)
+        local autoRollInput = rollPID:get()
 
--- are we in deep space or are we near a planet ?
-local planetInfluence = unit.getClosestPlanetInfluence()
-if planetInfluence > 0
-then
-    -- stabilize orientation along the gravity, and yaw along starting yaw
-    if (rollPID == nil) then
-        rollPID = pid.new(0.1, 0, 2)
-        pitchPID = pid.new(0.1, 0, 2)
-        yawPID = pid.new(0.001, 0, 0)
+        targetAngularVelocity = targetAngularVelocity + autoRollInput * constructForward
     end
+    local turnAssistRollThreshold = 20.0
+        if turnAssist == true and currentRollDegAbs > turnAssistRollThreshold and finalPitchInput == 0 and finalYawInput == 0 then
+        local rollToPitchFactor = turnAssistFactor * 0.1         local rollToYawFactor = turnAssistFactor * 0.025 
+                local rescaleRollDegAbs = ((currentRollDegAbs - turnAssistRollThreshold) / (180 - turnAssistRollThreshold)) * 180
+        local rollVerticalRatio = 0
+        if rescaleRollDegAbs < 90 then
+            rollVerticalRatio = rescaleRollDegAbs / 90
+        elseif rescaleRollDegAbs < 180 then
+            rollVerticalRatio = (180 - rescaleRollDegAbs) / 90
+        end
 
-    if currentYawDeg < 180 then
-        yawDelta = currentYawDeg - 360
-    else
-        yawDelta = currentYawDeg
+        rollVerticalRatio = rollVerticalRatio * rollVerticalRatio
+
+        local turnAssistYawInput = - currentRollDegSign * rollToYawFactor * (1.0 - rollVerticalRatio)
+        local turnAssistPitchInput = rollToPitchFactor * rollVerticalRatio
+
+        targetAngularVelocity = targetAngularVelocity
+                            + turnAssistPitchInput * constructRight
+                            + turnAssistYawInput * constructUp
     end
-
-    rollPID:inject(-currentRollDeg)
-    pitchPID:inject(-currentPitchDeg)
-    yawPID:inject(-yawDelta)
-    angularAcceleration = rollPID:get() * worldForward + pitchPID:get() * worldRight + yawPID:get() * worldUp
-else
-    -- cancel rotation
-    local worldAngularVelocity = vec3(construct.getWorldAngularVelocity())
-    angularAcceleration = - power * worldAngularVelocity
 end
 
-Nav:setEngineTorqueCommand('torque', angularAcceleration, keepCollinearity, 'airfoil', '', '', tolerancePercentToSkipOtherPriorities)
-
--- Engine commands
-local keepCollinearity = 1 -- for easier reading
-local dontKeepCollinearity = 0 -- for easier reading
-local tolerancePercentToSkipOtherPriorities = 1 -- if we are within this tolerance (in%), we don't go to the next priorities
-
+local keepCollinearity = 1 local dontKeepCollinearity = 0 local tolerancePercentToSkipOtherPriorities = 1 
 if ap.enabled
 then
     keepCollinearity = ap.keepCollinearity
@@ -118,63 +97,144 @@ then
     tolerancePercentToSkipOtherPriorities = ap.tolerancePercentToSkipOtherPriorities
 end
 
--- Brakes
+local angularAcceleration = torqueFactor * (targetAngularVelocity - constructAngularVelocity)
+if (ap.enabled) then
+    angularAcceleration = torqueFactor * (ap.thrustVector.z - constructAngularVelocity)
+end
+local airAcceleration = vec3(construct.getWorldAirFrictionAngularAcceleration())
+angularAcceleration = angularAcceleration Nav:setEngineTorqueCommand('torque', angularAcceleration, keepCollinearity, 'airfoil', '', '', tolerancePercentToSkipOtherPriorities)
+
 local brakeAcceleration = -finalBrakeInput * (brakeSpeedFactor * constructVelocity + brakeFlatFactor * constructVelocityDir)
 Nav:setEngineForceCommand('brake', brakeAcceleration)
 
--- AutoNavigation regroups all the axis command by 'TargetSpeed'
 local autoNavigationEngineTags = ''
 local autoNavigationAcceleration = vec3()
 local autoNavigationUseBrake = false
 
--- Longitudinal Translation
 local longitudinalEngineTags = 'thrust analog longitudinal'
 local longitudinalCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.longitudinal)
-if ap.enabled
-then
-    Nav.axisCommandManager:setTargetSpeedCommand(axisCommandId.longitudinal, ap.longitudinalAcceleration)
-    autoNavigationAcceleration = autoNavigationAcceleration + Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.longitudinal)
-    autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. longitudinalEngineTags
+local longitudinalAcceleration = 0
+if ap.enabled then
+    local axisCRefDirection = vec3(self.construct.getOrientationForward())
+    local maxKPAlongAxis = self.construct.getMaxThrustAlongAxis(longitudinalEngineTags, {axisCRefDirection:unpack()})
+    local forceCorrespondingToThrottle = 0
+    if (inspace == 0) then
+        if (ap.thrustVector.x > 0) then
+            local maxAtmoForceForward = maxKPAlongAxis[1]
+            forceCorrespondingToThrottle = ap.thrustVector.x * maxAtmoForceForward
+        else
+            local maxAtmoForceForward = maxKPAlongAxis[2]
+            forceCorrespondingToThrottle = -ap.thrustVector.x * maxAtmoForceForward
+        end
+    else
+        if (ap.thrustVector.x > 0) then
+            local maxSpaceForceForward = maxKPAlongAxis[3]
+            forceCorrespondingToThrottle = ap.thrustVector.x * maxSpaceForceForward
+        else
+            local maxSpaceForceForward = maxKPAlongAxis[4]
+            forceCorrespondingToThrottle = -ap.thrustVector.x * maxSpaceForceForward
+        end
+    end
+    longitudinalAcceleration = forceCorrespondingToThrottle / self.mass * vec3(self.construct.getWorldOrientationForward()) + accelerationFromGravity
+    ap.longitudinalAcceleration = longitudinalAcceleration
+    autoNavigationAcceleration = autoNavigationAcceleration + longitudinalAcceleration
 else
-    local longitudinalAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(longitudinalEngineTags,axisCommandId.longitudinal)
-    Nav:setEngineForceCommand(longitudinalEngineTags, longitudinalAcceleration, keepCollinearity)
+    longitudinalAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(longitudinalEngineTags,axisCommandId.longitudinal)
 end
 
--- Lateral Translation
+if (longitudinalCommandType == axisCommandType.byThrottle) then
+    Nav:setEngineForceCommand(longitudinalEngineTags, longitudinalAcceleration, keepCollinearity)
+elseif  (longitudinalCommandType == axisCommandType.byTargetSpeed) then
+        autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. longitudinalEngineTags
+    end
+
+if (Nav.axisCommandManager:getTargetSpeed(axisCommandId.longitudinal) == 0 or 
+    Nav.axisCommandManager:getCurrentToTargetDeltaSpeed(axisCommandId.longitudinal) < - Nav.axisCommandManager:getTargetSpeedCurrentStep(axisCommandId.longitudinal) * 0.5) then
+    autoNavigationUseBrake = true
+    ap.brakeInput = true
+end
+
 local lateralStrafeEngineTags = 'thrust analog lateral'
 local lateralCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.lateral)
+local lateralStrafeAcceleration = 0
 if ap.enabled
-then
-    Nav.axisCommandManager:setTargetSpeedCommand(axisCommandId.lateral, ap.lateralAcceleration)
-    autoNavigationAcceleration = autoNavigationAcceleration + Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.lateral)
-    autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. lateralStrafeEngineTags
-else
-    local lateralStrafeAcceleration =  Nav.axisCommandManager:composeAxisAccelerationFromThrottle(lateralStrafeEngineTags,axisCommandId.lateral)
-    Nav:setEngineForceCommand(lateralStrafeEngineTags, lateralStrafeAcceleration, keepCollinearity)
+    then
+        local axisCRefDirection = vec3(self.construct.getOrientationRight())
+        local maxKPAlongAxis = self.construct.getMaxThrustAlongAxis(longitudinalEngineTags, {axisCRefDirection:unpack()})
+        local forceCorrespondingToThrottle = 0
+        if (inspace == 0) then
+            if (ap.thrustVector.z > 0) then
+                local maxAtmoForceForward = maxKPAlongAxis[1]
+                forceCorrespondingToThrottle = ap.thrustVector.z * maxAtmoForceForward
+            else
+                local maxAtmoForceForward = maxKPAlongAxis[2]
+                forceCorrespondingToThrottle = -ap.thrustVector.z * maxAtmoForceForward
+            end
+        else
+            if (ap.thrustVector.z > 0) then
+                local maxSpaceForceForward = maxKPAlongAxis[3]
+                forceCorrespondingToThrottle = ap.thrustVector.z * maxSpaceForceForward
+            else
+                local maxSpaceForceForward = maxKPAlongAxis[4]
+                forceCorrespondingToThrottle = -ap.thrustVector.z * maxSpaceForceForward
+            end
+        end
+        lateralStrafeAcceleration = forceCorrespondingToThrottle / self.mass * vec3(self.construct.getWorldOrientationRight()) + accelerationFromGravity
+        ap.lateralStrafeAcceleration = lateralStrafeAcceleration
+        autoNavigationAcceleration = autoNavigationAcceleration + lateralStrafeAcceleration
+    else
+        lateralStrafeAcceleration =  Nav.axisCommandManager:composeAxisAccelerationFromThrottle(lateralStrafeEngineTags,axisCommandId.lateral)
+    end
+    if (lateralCommandType == axisCommandType.byThrottle) then
+        Nav:setEngineForceCommand(lateralStrafeEngineTags, lateralStrafeAcceleration, keepCollinearity)
+    elseif  (lateralCommandType == axisCommandType.byTargetSpeed) then
+                autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. lateralStrafeEngineTags
 end
 
--- Vertical Translation
 local verticalStrafeEngineTags = 'thrust analog vertical'
 local verticalCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.vertical)
+local verticalStrafeAcceleration = 0
 if ap.enabled
-then
-    Nav.axisCommandManager:setTargetSpeedCommand(axisCommandId.vertical, ap.verticalAcceleration)
-    autoNavigationAcceleration = autoNavigationAcceleration + Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.vertical)
-    autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. verticalStrafeEngineTags
-else
-    local verticalStrafeAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(verticalStrafeEngineTags,axisCommandId.vertical)
-    Nav:setEngineForceCommand(verticalStrafeEngineTags, verticalStrafeAcceleration, keepCollinearity, 'airfoil', 'ground', '', tolerancePercentToSkipOtherPriorities)
-end
-
--- Auto Navigation (Cruise Control)
-if (autoNavigationAcceleration:len() > constants.epsilon) then
-    if (brakeInput ~= 0 or autoNavigationUseBrake or math.abs(constructVelocityDir:dot(constructForward)) < 0.95)  -- if the velocity is not properly aligned with the forward
     then
-        autoNavigationEngineTags = autoNavigationEngineTags .. ', brake'
+        local axisCRefDirection = vec3(self.construct.getOrientationRight())
+        local maxKPAlongAxis = self.construct.getMaxThrustAlongAxis(longitudinalEngineTags, {axisCRefDirection:unpack()})
+        local forceCorrespondingToThrottle = 0
+        if (inspace == 0) then
+            if (ap.thrustVector.y > 0) then
+                local maxAtmoForceForward = maxKPAlongAxis[1]
+                forceCorrespondingToThrottle = ap.thrustVector.y * maxAtmoForceForward
+            else
+                local maxAtmoForceForward = maxKPAlongAxis[2]
+                forceCorrespondingToThrottle = -ap.thrustVector.y * maxAtmoForceForward
+            end
+        else
+            if (ap.thrustVector.x > 0) then
+                local maxSpaceForceForward = maxKPAlongAxis[3]
+                forceCorrespondingToThrottle = ap.thrustVector.y * maxSpaceForceForward
+            else
+                local maxSpaceForceForward = maxKPAlongAxis[4]
+                forceCorrespondingToThrottle = -ap.thrustVector.y * maxSpaceForceForward
+            end
+        end
+        verticalStrafeAcceleration = forceCorrespondingToThrottle / self.mass * vec3(self.construct.getWorldOrientationRight()) + accelerationFromGravity
+        ap.verticalStrafeAcceleration = verticalStrafeAcceleration
+        autoNavigationAcceleration = autoNavigationAcceleration + verticalStrafeAcceleration
+    else
+        verticalStrafeAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(verticalStrafeEngineTags,axisCommandId.vertical)
     end
-    
-    Nav:setEngineForceCommand(autoNavigationEngineTags, autoNavigationAcceleration, dontKeepCollinearity, '', '', '', tolerancePercentToSkipOtherPriorities)
+    if (verticalCommandType == axisCommandType.byThrottle) then
+        Nav:setEngineForceCommand(verticalStrafeEngineTags, verticalStrafeAcceleration, keepCollinearity, 'airfoil', 'ground', '', tolerancePercentToSkipOtherPriorities)
+    elseif  (verticalCommandType == axisCommandType.byTargetSpeed) then
+                autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. verticalStrafeEngineTags 
 end
 
--- Rockets
+if (autoNavigationAcceleration:len() > constants.epsilon) then
+    if (brakeInput ~= 0 or autoNavigationUseBrake or math.abs(constructVelocityDir:dot(constructForward)) < 0.95)      then
+        autoNavigationEngineTags = autoNavigationEngineTags .. ', brake'
+    else
+        Nav:setEngineForceCommand(autoNavigationEngineTags, autoNavigationAcceleration, ap.dontKeepCollinearity, '', '', '', ap.tolerancePercentToSkipOtherPriorities)
+    end
+end
+
 Nav:setBoosterCommand('rocket_engine')
+

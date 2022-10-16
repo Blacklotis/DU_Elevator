@@ -1,10 +1,8 @@
--- category panel display helpers
 _autoconf = {}
 _autoconf.panels = {}
 _autoconf.panels_size = 0
 _autoconf.displayCategoryPanel = function(elements, size, title, type, widgetPerData)
-    widgetPerData = widgetPerData or false -- default to one widget for all data
-    if size > 0 then
+    widgetPerData = widgetPerData or false     if size > 0 then
         local panel = system.createWidgetPanel(title)
         local widget
         if not widgetPerData then
@@ -25,7 +23,6 @@ _autoconf.hideCategoryPanels = function()
         system.destroyWidgetPanel(_autoconf.panels[i])
     end
 end
--- Proxy array to access auto-plugged slots programmatically
 
 atmofueltank = {}
 atmofueltank[1] = atmofueltank_1
@@ -42,7 +39,6 @@ weapon_size = 0
 
 radar = {}
 radar_size = 0
--- End of auto-generated code
 pitchInput = 0
 rollInput = 0
 yawInput = 0
@@ -52,18 +48,14 @@ Nav = Navigator.new(system, core, unit)
 Nav.axisCommandManager:setupCustomTargetSpeedRanges(axisCommandId.longitudinal, {1000, 5000, 10000, 20000, 30000})
 Nav.axisCommandManager:setTargetGroundAltitude(0)
 
--- Parenting widget
 parentingPanelId = system.createWidgetPanel("Docking")
 parentingWidgetId = system.createWidget(parentingPanelId,"parenting")
 system.addDataToWidget(unit.getWidgetDataId(),parentingWidgetId)
 
--- Combat stress widget
 coreCombatStressPanelId = system.createWidgetPanel("Core combat stress")
 coreCombatStressgWidgetId = system.createWidget(coreCombatStressPanelId,"core_stress")
 system.addDataToWidget(core.getWidgetDataId(),coreCombatStressgWidgetId)
 
--- element widgets
--- For now we have to alternate between PVP and non-PVP widgets to have them on the same side.
 _autoconf.displayCategoryPanel(weapon, weapon_size, "Weapons", "weapon", true)
 core.showWidget()
 _autoconf.displayCategoryPanel(radar, radar_size, "Periscope", "periscope")
@@ -83,8 +75,7 @@ if spacefueltank_size > 0 then
     end
 end
 _autoconf.displayCategoryPanel(rocketfueltank, rocketfueltank_size, "Rocket Fuel", "fuel_container")
-if placeRadar then -- We either have only rockets or no fuel tanks at all, uncommon for usual vessels
-    _autoconf.displayCategoryPanel(radar, radar_size, "Radar", "radar")
+if placeRadar then     _autoconf.displayCategoryPanel(radar, radar_size, "Radar", "radar")
     placeRadar = false
 end
 if antigrav ~= nil then antigrav.showWidget() end
@@ -92,28 +83,19 @@ if warpdrive ~= nil then warpdrive.showWidget() end
 if gyro ~= nil then gyro.showWidget() end
 if shield ~= nil then shield.showWidget() end
 
--- freeze the player in he is remote controlling the construct
 if unit.isRemoteControlled() == 1 then
     player.freeze(1)
 end
 
--- landing gear
--- make sure every gears are synchonized with the first
-gearExtended = (unit.isAnyLandingGearDeployed() == 1) -- make sure it's a lua boolean
-if gearExtended then
+gearExtended = (unit.isAnyLandingGearDeployed() == 1) if gearExtended then
     unit.deployLandingGears()
 else
     unit.retractLandingGears()
 end
 
-
-Alioth = Planet:new(0, 0, 199718.78, vec3(-8.0000, -8.0000, -126303.0000), 126067.8984375)
-
+atlas = require("atlas")
 ap = AutoPilot:new(false)
-ap.currentPlanet = Alioth
-ap.currentTarget = getDestination(ap.currentPlanet.center, vec3(construct.getWorldPosition()), ap.targetAltitude)
-ap.headingTarget = getHeading(vec3(construct.getWorldOrientationForward()))
-ap.positionHoldEnabled = true
 
 unit.setTimer("tickAltitude", 0.1)
 unit.setTimer("tickDisplay", 0.5)
+

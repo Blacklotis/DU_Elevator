@@ -83,3 +83,7 @@ $output = $output.Replace("`t","    ")
 #$output = $output.Replace("\`"\n\`"","\n")
 $output | Out-File -FilePath $outputFileName -Force
 $output | Set-Clipboard
+
+$consoleMessage = "Characters: " + $output.Length + " / 50,000.  %" + [math]::Round( ($output.Length / 50000)*100, 0 ) + " full."
+
+$consoleMessage | Write-Output
