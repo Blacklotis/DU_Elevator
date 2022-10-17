@@ -18,7 +18,7 @@ if ap.enabled then
     ap.currentVelocity = construct.getWorldAbsoluteVelocity()
     ap.currentAcceleration = construct.getWorldAcceleration()
     ap.currentPlanetPos = getSystemPosition(ap.currentPosition)
-    ap.heading = getHeading(vec3(construct.getWorldOrientationForward()))
+    ap.heading = Transform.computeHeading(Alioth.center, ap.currentPosition, construct.getWorldOrientationForward()) --getHeading(vec3(construct.getWorldOrientationForward()))
     ap.thrustUp = unit.getEngineThrust("thrustUp")
     ap.thrustDown = unit.getEngineThrust("thrustDown")
     ap.thrustRight = unit.getEngineThrust("thrustRight")
