@@ -19,29 +19,17 @@ local finalBrakeInput =  brakeInput
 if not initFlush then 
     Nav.axisCommandManager:setMasterMode(1) 
     initFlush = true
-end
+    end
 
 -- validate params
-if ap.enabled
-then
-    pitchSpeedFactor = math.max(ap.pitchSpeedFactor, 0.01)
-    yawSpeedFactor = math.max(ap.yawSpeedFactor, 0.01)
-    rollSpeedFactor = math.max(ap.rollSpeedFactor, 0.01)
-    torqueFactor = math.max(ap.torqueFactor, 0.01)
-    brakeSpeedFactor = math.max(ap.brakeSpeedFactor, 0.01)
-    brakeFlatFactor = math.max(ap.brakeFlatFactor, 0.01)
-    autoRollFactor = math.max(ap.autoRollFactor, 0.01)
-    turnAssistFactor = math.max(ap.turnAssistFactor, 0.01)
-else
-    pitchSpeedFactor = math.max(pitchSpeedFactor, 0.01)
-    yawSpeedFactor = math.max(yawSpeedFactor, 0.01)
-    rollSpeedFactor = math.max(rollSpeedFactor, 0.01)
-    torqueFactor = math.max(torqueFactor, 0.01)
-    brakeSpeedFactor = math.max(brakeSpeedFactor, 0.01)
-    brakeFlatFactor = math.max(brakeFlatFactor, 0.01)
-    autoRollFactor = math.max(autoRollFactor, 0.01)
-    turnAssistFactor = math.max(turnAssistFactor, 0.01)
-end
+pitchSpeedFactor = math.max(pitchSpeedFactor, 0.01)
+yawSpeedFactor = math.max(yawSpeedFactor, 0.01)
+rollSpeedFactor = math.max(rollSpeedFactor, 0.01)
+torqueFactor = math.max(torqueFactor, 0.01)
+brakeSpeedFactor = math.max(brakeSpeedFactor, 0.01)
+brakeFlatFactor = math.max(brakeFlatFactor, 0.01)
+autoRollFactor = math.max(autoRollFactor, 0.01)
+turnAssistFactor = math.max(turnAssistFactor, 0.01)
 
 -- final inputs
 if ap.enabled

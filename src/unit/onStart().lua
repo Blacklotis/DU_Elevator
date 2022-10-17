@@ -115,5 +115,5 @@ ap.currentTarget = getDestination(ap.currentPlanet.center, vec3(construct.getWor
 ap.headingTarget = getHeading(vec3(construct.getWorldOrientationForward()))
 ap.positionHoldEnabled = true
 
-unit.setTimer("tickAltitude", 0.1)
+unit.setTimer("tickAltitude", 0.05)
 unit.setTimer("tickDisplay", 0.5)

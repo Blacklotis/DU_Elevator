@@ -9,25 +9,6 @@ end
 
 -- show stuffs
 screenMain.setCenteredText(
-    "World POS: " .. tostring(ap.currentPosition) .. [[
-    
-    ]]..
-    "Target POS: " .. tostring(testDest) .. [[
-
-    ]]..
-    "Thrust Vector: " .. tostring((ap.currentPosition - testDest):normalize_inplace()) .. [[
-
-    ]]..
-    "World Vertical: " .. tostring(vec3(core.getWorldVertical())) .. [[
-
-    ]]..
-        "Dev1: " .. (ap.currentPosition - ((homePosition - Alioth.center):normalize_inplace() * (ap.currentAltitude - homeAltitude) + homePosition)):len() .. [[
-
-    ]]..
-    
-    "Heading: " .. ap.heading  .. [[
-
-    ]]..
     "TargetAltitude: " .. ap.targetAltitude .. [[
 
     ]]..
@@ -37,7 +18,10 @@ screenMain.setCenteredText(
     "HeightDelta: " .. heightDelta .. [[
 
     ]]..
-    "Deviation: " .. tostring(ap.currentPlanetPos - ap.targetPlanetPos) .. [[
+    "Dev1: " .. tostring(ap.deviation) .. [[
+
+    ]]..
+    "Heading: " .. ap.heading  .. [[
 
     ]]..
     "Target Speed Up: " .. ap.verticalAcceleration .. [[
