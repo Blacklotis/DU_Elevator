@@ -64,13 +64,45 @@ function getSystemPosition(currentPosition, asString)
     end
 end
 
-function calculateThrustVector()
-    adjustedPosition = ap.targetPosition - ap.currentPosition
-    local magnitude = adjustedPosition
+function calculateThrustVector(adjustedPosition)
+    local magnitude = adjustedPosition:len()
     local heading = math.atan(adjustedPosition.z, adjustedPosition.x) * constants.rad2deg
     local xzPlane = math.sqrt(adjustedPosition.x * adjustedPosition.x + adjustedPosition.z * adjustedPosition.z)
     local pitch = math.atan(adjustedPosition.y, xzPlane) * constants.rad2deg
     return vec3(magnitude, heading, pitch)
 end
 
+
+function calculateAxisThrust(referenceAxis, targetAxis, direction)
+    local maxKPAlongAxis = self.construct.getMaxThrustAlongAxis(longitudinalEngineTags, {referenceAxis:unpack()})
+    local forceCorrespondingToThrottle = 0
+
+    if(direction == "up") then
+        axisThrottle = ap.thrustVector.x
+    elseif (direction == "right") then
+        axisThrottle = ap.thrustVector.y
+    elseif (direction == "forward") then
+        axisThrottle = ap.thrustVector.z
+    end
+    if (inspace == 0) then
+        if (axisThrottle > 0) then
+            local maxAtmoForceForward = maxKPAlongAxis[1]
+            forceCorrespondingToThrottle = axisThrottle * maxAtmoForceForward
+        else
+            local maxAtmoForceForward = maxKPAlongAxis[2]
+            forceCorrespondingToThrottle = -axisThrottle * maxAtmoForceForward
+        end
+    else
+        if (axisThrottle > 0) then
+            local maxSpaceForceForward = maxKPAlongAxis[3]
+            forceCorrespondingToThrottle = axisThrottle * maxSpaceForceForward
+        else
+            local maxSpaceForceForward = maxKPAlongAxis[4]
+            forceCorrespondingToThrottle = -axisThrottle * maxSpaceForceForward
+        end
+    end
+    local accelerationCommand = forceCorrespondingToThrottle / self.mass
+    local finalAcceleration = accelerationCommand * targetAxis + accelerationFromGravity
+    return finalAcceleration
+end
 

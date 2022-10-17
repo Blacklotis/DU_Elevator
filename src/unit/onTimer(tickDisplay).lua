@@ -2,39 +2,39 @@
 if not displayInit then
     displayInit = true
     fontSize = ("2.1")
-    heightDelta = 0
-    magnitude = 0
-    heading = 0
-    pitch = 0
-    startingAltitude = ap.currentAltitude
+    adjustedPosition = 0
+    angularAcceleration = 0
 end
 
-        screenMain.setCenteredText(
-        "Starting POS: " .. tostring(ap.startingPosition) .. [[
-    
-        ]]..
-        "Current POS: " .. tostring(ap.currentPosition) .. [[
+screenMain.setCenteredText(
+    "AutoPilot Enabled: " .. tostring(ap.enabled) .. [[
 
-            ]]..
-        "Target POS: " .. tostring(ap.targetPosition) .. [[
+    ]]..
+    "Adjusted Pos: " .. tostring(adjustedPosition) .. [[
+
+    ]]..
+    "Current Alt: " .. utils.round(ap.currentAltitude, 2) .. [[
+
+    ]]..
+    "Brakes enabled: " .. utils.round(brakeInput, 4) .. [[
+
+    ]]..
+    "thrustVector: " .. tostring(ap.thrustVector) .. [[
 
         ]]..
-        "current alt: " .. tostring(ap.currentAltitude) .. [[
-
-        ]]..
-        "Braked enabled: " .. tostring(brakeInput) .. [[
-
-        ]]..
-        "Magnitutde: " .. ap.thrustVector.x .. [[
+    "angularAcceleration: " .. tostring(angularAcceleration) .. [[
 
         ]].. 
-        "Heading: " .. ap.thrustVector.y .. [[
+    "longitudinalAcceleration: " .. tostring(ap.longitudinalAcceleration) .. [[
 
-            ]]..
-        "Bank: " .. ap.thrustVector.z .. [[
+    ]].. 
+    "lateralStrafeAcceleration: " .. tostring(ap.lateralStrafeAcceleration) .. [[
 
-            ]]
-        )
+    ]]..
+    "verticalStrafeAcceleration: " .. tostring(ap.verticalStrafeAcceleration) .. [[
+
+    ]]
+)
 
 renderScript = [[
 
