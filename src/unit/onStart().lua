@@ -29,10 +29,13 @@ end
 
 atmofueltank = {}
 atmofueltank[1] = atmofueltank_1
-atmofueltank_size = 1
+atmofueltank[2] = atmofueltank_2
+atmofueltank_size = 2
 
 spacefueltank = {}
-spacefueltank_size = 0
+spacefueltank[1] = spacefueltank_1
+spacefueltank[2] = spacefueltank_2
+spacefueltank_size = 2
 
 rocketfueltank = {}
 rocketfueltank_size = 0
