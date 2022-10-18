@@ -3,7 +3,8 @@ _autoconf = {}
 _autoconf.panels = {}
 _autoconf.panels_size = 0
 _autoconf.displayCategoryPanel = function(elements, size, title, type, widgetPerData)
-    widgetPerData = widgetPerData or false -- default to one widget for all data
+    -- default to one widget for all data
+    widgetPerData = widgetPerData or false 
     if size > 0 then
         local panel = system.createWidgetPanel(title)
         local widget
@@ -86,7 +87,8 @@ if spacefueltank_size > 0 then
     end
 end
 _autoconf.displayCategoryPanel(rocketfueltank, rocketfueltank_size, "Rocket Fuel", "fuel_container")
-if placeRadar then -- We either have only rockets or no fuel tanks at all, uncommon for usual vessels
+-- We either have only rockets or no fuel tanks at all, uncommon for usual vessels
+if placeRadar then 
     _autoconf.displayCategoryPanel(radar, radar_size, "Radar", "radar")
     placeRadar = false
 end
@@ -102,7 +104,8 @@ end
 
 -- landing gear
 -- make sure every gears are synchonized with the first
-gearExtended = (unit.isAnyLandingGearDeployed() == 1) -- make sure it's a lua boolean
+-- make sure it's a lua boolean
+gearExtended = (unit.isAnyLandingGearDeployed() == 1)
 if gearExtended then
     unit.deployLandingGears()
 else
@@ -111,7 +114,6 @@ end
 
 
 Alioth = Planet:new(0, 0, 199718.78, vec3(-8.0000, -8.0000, -126303.0000), 126067.8984375)
-
 ap = AutoPilot:new(false)
 ap.currentPlanet = Alioth
 ap.currentTarget = getDestination(ap.currentPlanet.center, vec3(construct.getWorldPosition()), ap.targetAltitude)

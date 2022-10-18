@@ -15,8 +15,8 @@ if utils.sign(ap.thrustVector.x) == utils.sign(gravityDot) then
         accelerationFromGravity = -vec3(self.core.getWorldGravity())
 end
 
-local worldVertical = vec3(core.getWorldVertical()) -- along gravity
-
+ -- along gravity
+local worldVertical = vec3(core.getWorldVertical())
 local currentRollDeg = getRoll(worldVertical, constructForward, constructRight)
 local currentRollDegAbs = math.abs(currentRollDeg)
 local currentRollDegSign = utils.sign(currentRollDeg)
@@ -79,8 +79,6 @@ end
 
 Nav:setBoosterCommand('rocket_engine')
 
-
-
 -- Local functions and static variables for onFlush
 local function composeAxisAccelerationFromTargetSpeedV(commandAxis, targetSpeed)
 
@@ -107,13 +105,17 @@ local function composeAxisAccelerationFromTargetSpeedV(commandAxis, targetSpeed)
     local currentAxisSpeedMS = coreVelocity:dot(axisCRefDirection)
     local targetAxisSpeedMS = targetSpeed * constants.kph2m
 
-    if targetSpeedPID2 == nil then -- CHanged first param from 1 to 10...
-        targetSpeedPID2 = pid.new(10, 0, 10.0) -- The PID used to compute acceleration to reach target speed
+     -- CHanged first param from 1 to 10...
+    if targetSpeedPID2 == nil then
+        -- The PID used to compute acceleration to reach target speed
+        targetSpeedPID2 = pid.new(10, 0, 10.0)
     end
 
-    targetSpeedPID2:inject(targetAxisSpeedMS - currentAxisSpeedMS) -- update PID
+     -- update PID
+    targetSpeedPID2:inject(targetAxisSpeedMS - currentAxisSpeedMS)
     local accelerationCommand = targetSpeedPID2:get()
-    local finalAcceleration = (accelerationCommand - airResistanceAccelerationCommand - gravityAccelerationCommand) * axisWorldDirection  -- Try to compensate air friction
+    -- Try to compensate air friction
+    local finalAcceleration = (accelerationCommand - airResistanceAccelerationCommand - gravityAccelerationCommand) * axisWorldDirection 
 
     -- The hell are these? Uncommented recently just in case they were important
     --s.addMeasure("dynamic", "acceleration", "command", accelerationCommand)
