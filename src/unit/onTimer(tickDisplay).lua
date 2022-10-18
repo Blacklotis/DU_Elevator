@@ -3,7 +3,6 @@
 --initalize
 if not displayInit then
     displayInit = true
-    fontSize = ("2.1")
     renderScript = [[
 
         local json = require('dkjson')
@@ -21,34 +20,30 @@ if not displayInit then
             clickY = 0,
         }
 
-        local rx, ry = getResolution()
-        local deltaT = getDeltaTime()
+        local rx, ry = getResolution() -- gets dimensions of screen
+        local deltaT = getDeltaTime() -- time between frames, if we need to know this
 
-
-        local symbols = {}
-        
         local fascia = loadImage("assets.prod.novaquark.com/59180/a2a33bc9-b0cb-405f-8530-a4971e8c62fc.jpg")
-
         local top_layer = createLayer()
-        local font = loadFont('Play-Bold', 14)
 
         function drawLocationInfo(theLayer, ix, iy)
             local fontLocInfo = loadFont('Play-Bold', 28)
             local spacing = 30
+            local color = {r = 255, g = 0, b = 0, a = 1}
             -- setNextTextAlign(top_layer, AlignH_Center, AlignV_Middle)
-            setNextFillColor(theLayer, 255, 0, 0, 1)
+            setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
             addText(theLayer, fontLocInfo, "Target Altitude: ".. newState.targetAlt,                        ix, iy)
-            setNextFillColor(theLayer, 255, 0, 0, 1)
+            setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
             addText(theLayer, fontLocInfo, "Current Altitude: ".. newState.currentAlt,                      ix, iy + spacing * 1)
-            setNextFillColor(theLayer, 255, 0, 0, 1)
+            setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
             addText(theLayer, fontLocInfo, "Deviation: ".. newState.deviationX..", "..newState.deviationY,  ix, iy + spacing * 2)
-            setNextFillColor(theLayer, 255, 0, 0, 1)
+            setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
             addText(theLayer, fontLocInfo, "Heading: ".. newState.heading,                                  ix, iy + spacing * 3)
-            setNextFillColor(theLayer, 255, 0, 0, 1)
+            setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
             addText(theLayer, fontLocInfo, "Vert: ".. newState.vertThrust,                                  ix, iy + spacing * 4)
-            setNextFillColor(theLayer, 255, 0, 0, 1)
+            setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
             addText(theLayer, fontLocInfo, "Long: ".. newState.longitudinalThrust,                          ix, iy + spacing * 5)
-            setNextFillColor(theLayer, 255, 0, 0, 1)
+            setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
             addText(theLayer, fontLocInfo, "Lat: ".. newState.lateralThrust,                                ix, iy + spacing * 6)
 
             --setNextStrokeColor(theLayer, Shape_Line, 1, 1, 1, 0.5)
