@@ -3,9 +3,10 @@
 --initalize
 if not altitudeInit then
     altitudeInit = true
-    ap.targetAltitude = 20000
-    homePosition = vec3(-30896.343,101852.429,-58548.282)
-    homeAltitude = getAltitude(homePosition, ap.currentPlanet)
+    homePosition = vec3(data.getFloatValue("homeX"),data.getFloatValue("homeY"),data.getFloatValue("homeZ"))
+    homeAltitude = data.getFloatValue("homeH")
+    homeHeading = data.getFloatValue("homeHeading")
+    ap.targetAltitude = homeAltitude
     ap.currentPosition = vec3(construct.getWorldPosition())
     ap.currentAltitude = getAltitude(ap.currentPosition, ap.currentPlanet)
     ap.targetPlanetPos = getSystemPosition(homePosition) + vec3(0, 0, ap.targetAltitude - ap.currentAltitude)
@@ -18,7 +19,7 @@ if ap.enabled then
     ap.currentVelocity = construct.getWorldAbsoluteVelocity()
     ap.currentAcceleration = construct.getWorldAcceleration()
     ap.currentPlanetPos = getSystemPosition(ap.currentPosition)
-    ap.heading = Transform.computeHeading(Alioth.center, ap.currentPosition, construct.getWorldOrientationForward()) --getHeading(vec3(construct.getWorldOrientationForward()))
+    ap.heading = getHeading(vec3(construct.getWorldOrientationForward()))
     ap.thrustUp = unit.getEngineThrust("thrustUp")
     ap.thrustDown = unit.getEngineThrust("thrustDown")
     ap.thrustRight = unit.getEngineThrust("thrustRight")
@@ -39,7 +40,7 @@ if ap.enabled then
     local goingUp = ap.currentAltitude < ap.targetAltitude
     heightDelta = ap.targetAltitude - ap.currentAltitude
 
-    if ap.currentAltitude < 10000 then heightDelta = utils.clamp(heightDelta, -1200, 1200) end
+    if ap.currentAltitude < 12000 then heightDelta = utils.clamp(heightDelta, -1200, 1200) end
     if math.abs(heightDelta) < 1000 then heightDelta = utils.clamp(heightDelta, -200, 200) end
     
     heightDelta = utils.clamp(heightDelta, -4000, 4000)

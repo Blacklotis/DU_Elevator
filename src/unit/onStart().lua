@@ -53,7 +53,7 @@ brakeInput = 0
 
 Nav = Navigator.new(system, core, unit)
 Nav.axisCommandManager:setupCustomTargetSpeedRanges(axisCommandId.longitudinal, {1000, 5000, 10000, 20000, 30000})
-Nav.axisCommandManager:setTargetGroundAltitude(0)
+Nav.axisCommandManager:setTargetGroundAltitude(0) 
 
 -- Parenting widget
 parentingPanelId = system.createWidgetPanel("Docking")

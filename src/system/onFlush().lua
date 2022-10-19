@@ -16,10 +16,7 @@ local finalRollInput = 0
 local finalYawInput = 0
 local finalBrakeInput =  brakeInput
 
-if not initFlush then 
-    Nav.axisCommandManager:setMasterMode(1) 
-    initFlush = true
-    end
+if not homeHeading then homeHeading = 0 end
 
 -- validate params
 pitchSpeedFactor = math.max(pitchSpeedFactor, 0.01)
@@ -81,11 +78,8 @@ then
         yawPID = pid.new(0.1, 0, 2)
     end
 
-    if currentYawDeg < 180 then
-        yawDelta = currentYawDeg - 360
-    else
-        yawDelta = currentYawDeg
-    end
+
+    yawDelta = homeHeading - currentYawDeg
 
     rollPID:inject(-currentRollDeg)
     pitchPID:inject(-currentPitchDeg)
@@ -171,4 +165,3 @@ end
 
 -- Rockets
 Nav:setBoosterCommand('rocket_engine')
-
