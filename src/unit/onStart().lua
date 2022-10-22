@@ -95,7 +95,7 @@ if warpdrive ~= nil then warpdrive.showWidget() end
 if gyro ~= nil then gyro.showWidget() end
 if shield ~= nil then shield.showWidget() end
 
--- freeze the player in he is remote controlling the construct
+-- freeze the player if he is remote controlling the construct
 if unit.isRemoteControlled() == 1 then
     player.freeze(1)
 end

@@ -1,3 +1,49 @@
+local function composeAxisAccelerationFromTargetSpeed(commandAxis, targetSpeed)
+
+    local axisCRefDirection = vec3()
+    local axisWorldDirection = vec3()
+
+    if (commandAxis == axisCommandId.longitudinal) then
+        axisCRefDirection = vec3(construct.getOrientationForward())
+        axisWorldDirection = vec3(construct.getWorldOrientationForward())
+    elseif (commandAxis == axisCommandId.vertical) then
+        axisCRefDirection = vec3(construct.getOrientationUp())
+        axisWorldDirection = vec3(construct.getWorldOrientationUp())
+    elseif (commandAxis == axisCommandId.lateral) then
+        axisCRefDirection = vec3(construct.getOrientationRight())
+        axisWorldDirection = vec3(construct.getWorldOrientationRight())
+    else
+        return vec3()
+    end
+
+    local gravityAcceleration = vec3(core.getWorldGravity())
+    local gravityAccelerationCommand = gravityAcceleration:dot(axisWorldDirection)
+    local coreVelocity = vec3(core.getVelocity())
+
+    local airResistanceAcceleration = vec3(core.getWorldAirFrictionAcceleration())
+    local airResistanceAccelerationCommand = airResistanceAcceleration:dot(axisWorldDirection)
+
+    local currentAxisSpeedMS = coreVelocity:dot(axisCRefDirection)
+
+    local targetAxisSpeedMS = targetSpeed * constants.kph2m
+
+    if targetSpeedPID == nil then -- Changed first param from 1 to 10...
+        targetSpeedPID = pid.new(10, 0, 10.0) -- The PID used to compute acceleration to reach target speed
+    end
+
+    targetSpeedPID:inject(targetAxisSpeedMS - currentAxisSpeedMS) -- update PID
+
+    local accelerationCommand = targetSpeedPID:get()
+
+    local finalAcceleration = (accelerationCommand - airResistanceAccelerationCommand - gravityAccelerationCommand) * axisWorldDirection  -- Try to compensate air friction
+
+    -- The hell are these? Uncommented recently just in case they were important
+    --s.addMeasure("dynamic", "acceleration", "command", accelerationCommand)
+    --s.addMeasure("dynamic", "acceleration", "intensity", finalAcceleration:len())
+
+    return finalAcceleration
+end
+
 -- constants: use 'myvar = defaultValue --export: description' to expose the variable in context menu
 
 local pitchSpeedFactor = 0.8 --export: This factor will increase/decrease the player input along the pitch axis<br>(higher value may be unstable)<br>Valid values: Superior or equal to 0.01
@@ -69,7 +115,7 @@ local targetAngularVelocity = finalPitchInput * pitchSpeedFactor * constructRigh
 
 -- are we in deep space or are we near a planet ?
 local planetInfluence = unit.getClosestPlanetInfluence()
-if planetInfluence > 0
+if ap.enabled
 then
     -- stabilize orientation along the gravity, and yaw along starting yaw
     if (rollPID == nil) then
@@ -88,7 +134,7 @@ then
 else
     -- cancel rotation
     local worldAngularVelocity = vec3(construct.getWorldAngularVelocity())
-    angularAcceleration = - power * worldAngularVelocity
+    angularAcceleration = - 10 * worldAngularVelocity
 end
 
 Nav:setEngineTorqueCommand('torque', angularAcceleration, keepCollinearity, 'airfoil', '', '', tolerancePercentToSkipOtherPriorities)
@@ -109,19 +155,13 @@ end
 local brakeAcceleration = -finalBrakeInput * (brakeSpeedFactor * constructVelocity + brakeFlatFactor * constructVelocityDir)
 Nav:setEngineForceCommand('brake', brakeAcceleration)
 
--- AutoNavigation regroups all the axis command by 'TargetSpeed'
-local autoNavigationEngineTags = ''
-local autoNavigationAcceleration = vec3()
-local autoNavigationUseBrake = false
-
 -- Longitudinal Translation
 local longitudinalEngineTags = 'thrust analog longitudinal'
 local longitudinalCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.longitudinal)
 if ap.enabled
 then
-    Nav.axisCommandManager:setTargetSpeedCommand(axisCommandId.longitudinal, ap.longitudinalAcceleration)
-    autoNavigationAcceleration = autoNavigationAcceleration + Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.longitudinal)
-    autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. longitudinalEngineTags
+    local longitudinalAcceleration = composeAxisAccelerationFromTargetSpeed(axisCommandId.longitudinal, ap.longitudinalAcceleration)
+    Nav:setEngineForceCommand(longitudinalEngineTags, longitudinalAcceleration, keepCollinearity)
 else
     local longitudinalAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(longitudinalEngineTags,axisCommandId.longitudinal)
     Nav:setEngineForceCommand(longitudinalEngineTags, longitudinalAcceleration, keepCollinearity)
@@ -132,9 +172,8 @@ local lateralStrafeEngineTags = 'thrust analog lateral'
 local lateralCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.lateral)
 if ap.enabled
 then
-    Nav.axisCommandManager:setTargetSpeedCommand(axisCommandId.lateral, ap.lateralAcceleration)
-    autoNavigationAcceleration = autoNavigationAcceleration + Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.lateral)
-    autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. lateralStrafeEngineTags
+    local lateralStrafeAcceleration =  composeAxisAccelerationFromTargetSpeed(axisCommandId.lateral, ap.lateralAcceleration)
+    Nav:setEngineForceCommand(lateralStrafeEngineTags, lateralStrafeAcceleration, keepCollinearity)
 else
     local lateralStrafeAcceleration =  Nav.axisCommandManager:composeAxisAccelerationFromThrottle(lateralStrafeEngineTags,axisCommandId.lateral)
     Nav:setEngineForceCommand(lateralStrafeEngineTags, lateralStrafeAcceleration, keepCollinearity)
@@ -145,22 +184,11 @@ local verticalStrafeEngineTags = 'thrust analog vertical'
 local verticalCommandType = Nav.axisCommandManager:getAxisCommandType(axisCommandId.vertical)
 if ap.enabled
 then
-    Nav.axisCommandManager:setTargetSpeedCommand(axisCommandId.vertical, ap.verticalAcceleration)
-    autoNavigationAcceleration = autoNavigationAcceleration + Nav.axisCommandManager:composeAxisAccelerationFromTargetSpeed(axisCommandId.vertical)
-    autoNavigationEngineTags = autoNavigationEngineTags .. ' , ' .. verticalStrafeEngineTags
+    local verticalStrafeAcceleration = composeAxisAccelerationFromTargetSpeed(axisCommandId.vertical, ap.verticalAcceleration)
+    Nav:setEngineForceCommand(verticalStrafeEngineTags, verticalStrafeAcceleration, keepCollinearity, 'airfoil', 'ground', '', tolerancePercentToSkipOtherPriorities)
 else
     local verticalStrafeAcceleration = Nav.axisCommandManager:composeAxisAccelerationFromThrottle(verticalStrafeEngineTags,axisCommandId.vertical)
     Nav:setEngineForceCommand(verticalStrafeEngineTags, verticalStrafeAcceleration, keepCollinearity, 'airfoil', 'ground', '', tolerancePercentToSkipOtherPriorities)
-end
-
--- Auto Navigation (Cruise Control)
-if (autoNavigationAcceleration:len() > constants.epsilon) then
-    if (brakeInput ~= 0 or autoNavigationUseBrake or math.abs(constructVelocityDir:dot(constructForward)) < 0.95)  -- if the velocity is not properly aligned with the forward
-    then
-        autoNavigationEngineTags = autoNavigationEngineTags .. ', brake'
-    end
-    
-    Nav:setEngineForceCommand(autoNavigationEngineTags, autoNavigationAcceleration, dontKeepCollinearity, '', '', '', tolerancePercentToSkipOtherPriorities)
 end
 
 -- Rockets
