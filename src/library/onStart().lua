@@ -282,9 +282,9 @@ if library and library.systemResolution3 then
 
     function Transform.makeCoordinateConverters(coreUnit)
         local core     = coreUnit or core
-        local vc1      = core.getConstructWorldOrientationRight()
-        local vc2      = core.getConstructWorldOrientationForward()
-        local vc3      = core.getConstructWorldOrientationUp()
+        local vc1      = construct.getWorldOrientationRight()
+        local vc2      = construct.getWorldOrientationForward()
+        local vc3      = construct.getWorldOrientationUp()
         local vc1t     = solve(vc1, vc2, vc3, {1,0,0})
         local vc2t     = solve(vc1, vc2, vc3, {0,1,0})
         local vc3t     = solve(vc1, vc2, vc3, {0,0,1})
@@ -305,9 +305,9 @@ else
 
     function Transform.makeCoordinateConverters(coreUnit)
         local core     = coreUnit or core
-        local right    = vec3(core.getConstructWorldOrientationRight())
-        local fwd      = vec3(core.getConstructWorldOrientationForward())
-        local up       = vec3(core.getConstructWorldOrientationUp())
+        local right    = vec3(construct.getWorldOrientationRight())
+        local fwd      = vec3(construct.getWorldOrientationForward())
+        local up       = vec3(construct.getWorldOrientationUp())
          -- transform to construct coordinates
         return  function(world)
                 world = world.x and world or vec3(world)

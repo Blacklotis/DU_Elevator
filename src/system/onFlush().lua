@@ -18,9 +18,9 @@ local function composeAxisAccelerationFromTargetSpeed(commandAxis, targetSpeed)
 
     local gravityAcceleration = vec3(core.getWorldGravity())
     local gravityAccelerationCommand = gravityAcceleration:dot(axisWorldDirection)
-    local coreVelocity = vec3(core.getVelocity())
+    local coreVelocity = vec3(construct.getVelocity())
 
-    local airResistanceAcceleration = vec3(core.getWorldAirFrictionAcceleration())
+    local airResistanceAcceleration = vec3(construct.getWorldAirFrictionAcceleration())
     local airResistanceAccelerationCommand = airResistanceAcceleration:dot(axisWorldDirection)
 
     local currentAxisSpeedMS = coreVelocity:dot(axisCRefDirection)
