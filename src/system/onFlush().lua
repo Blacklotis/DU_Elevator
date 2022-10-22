@@ -27,19 +27,31 @@ local function composeAxisAccelerationFromTargetSpeed(commandAxis, targetSpeed)
 
     local targetAxisSpeedMS = targetSpeed * constants.kph2m
 
-    if targetSpeedPID == nil then -- Changed first param from 1 to 10...
-        targetSpeedPID = pid.new(10, 0, 10.0) -- The PID used to compute acceleration to reach target speed
+    if targetSpeedPIDLat == nil then -- Changed first param from 1 to 10...
+        targetSpeedPIDLat = pid.new(10, 0, 10.0) -- The PID used to compute acceleration to reach target speed
     end
 
-    targetSpeedPID:inject(targetAxisSpeedMS - currentAxisSpeedMS) -- update PID
+    if targetSpeedPIDLon == nil then -- Changed first param from 1 to 10...
+        targetSpeedPIDLon = pid.new(10, 0, 10.0) -- The PID used to compute acceleration to reach target speed
+    end
 
-    local accelerationCommand = targetSpeedPID:get()
+    if targetSpeedPIDVert == nil then -- Changed first param from 1 to 10...
+        targetSpeedPIDVert = pid.new(10, 0, 10.0) -- The PID used to compute acceleration to reach target speed
+    end
+
+    local accelerationCommand = 0
+    if (commandAxis == axisCommandId.longitudinal) then
+        targetSpeedPIDLon:inject(targetAxisSpeedMS - currentAxisSpeedMS) -- update PID
+        accelerationCommand = targetSpeedPIDLon:get()
+    elseif (commandAxis == axisCommandId.vertical) then
+        targetSpeedPIDVert:inject(targetAxisSpeedMS - currentAxisSpeedMS) -- update PID
+        accelerationCommand = targetSpeedPIDVert:get()
+    elseif (commandAxis == axisCommandId.lateral) then
+        targetSpeedPIDLat:inject(targetAxisSpeedMS - currentAxisSpeedMS) -- update PID
+        accelerationCommand = targetSpeedPIDLat:get()
+    end
 
     local finalAcceleration = (accelerationCommand - airResistanceAccelerationCommand - gravityAccelerationCommand) * axisWorldDirection  -- Try to compensate air friction
-
-    -- The hell are these? Uncommented recently just in case they were important
-    --s.addMeasure("dynamic", "acceleration", "command", accelerationCommand)
-    --s.addMeasure("dynamic", "acceleration", "intensity", finalAcceleration:len())
 
     return finalAcceleration
 end
