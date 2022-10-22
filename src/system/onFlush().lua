@@ -102,7 +102,7 @@ end
 
 
 -- Axis
-local worldVertical = vec3(core.getWorldVertical()) -- along gravity
+local worldVertical = vec3(core.getWorldVertical())
 local worldUp = vec3(construct.getWorldOrientationUp())
 local worldForward = vec3(construct.getWorldOrientationForward())
 local worldRight = vec3(construct.getWorldOrientationRight())
@@ -152,9 +152,9 @@ end
 Nav:setEngineTorqueCommand('torque', angularAcceleration, keepCollinearity, 'airfoil', '', '', tolerancePercentToSkipOtherPriorities)
 
 -- Engine commands
-local keepCollinearity = 1 -- for easier reading
-local dontKeepCollinearity = 0 -- for easier reading
-local tolerancePercentToSkipOtherPriorities = 1 -- if we are within this tolerance (in%), we don't go to the next priorities
+local keepCollinearity = 1
+local dontKeepCollinearity = 0
+local tolerancePercentToSkipOtherPriorities = 1
 
 if ap.enabled
 then

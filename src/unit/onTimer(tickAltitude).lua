@@ -1,5 +1,8 @@
 --tickAltitude(TickRate:0.1)
 
+floor2 = 100000 --export: 2nd floor height in meters
+floor3 = 250000 --export: 3rd floor height in meters
+
 --initalize
 if not altitudeInit then
     altitudeInit = true

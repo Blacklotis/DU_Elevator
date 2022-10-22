@@ -26,11 +26,12 @@ if not displayInit then
         local rx, ry = getResolution() -- gets dimensions of screen
         local deltaT = getDeltaTime() -- time between frames, if we need to know this
 
-        local fascia = loadImage("assets.prod.novaquark.com/59180/a2a33bc9-b0cb-405f-8530-a4971e8c62fc.jpg")
+        local fascia = loadImage("assets.prod.novaquark.com/59180/967e8212-093b-47c2-b48f-cd159c473d45.jpg")
+        local token = loadImage("assets.prod.novaquark.com/59180/098fca40-a42e-431a-a76b-8e16c7e47d8e.png")
         local top_layer = createLayer()
 
         function drawLocationInfo(theLayer, ix, iy)
-            local fontLocInfo = loadFont('Play-Bold', 28)
+            local fontLocInfo = loadFont('Play', 24)
             local spacing = 30
             local color = {r = 255, g = 0, b = 0, a = 1}
             -- setNextTextAlign(top_layer, AlignH_Center, AlignV_Middle)
@@ -57,14 +58,20 @@ if not displayInit then
 
         function drawFloorButton(theLayer, floorName, floorAlt, ix, iy)
             local fontFloorButton = loadFont('Play-Bold', 40)
-            local fontFloorButtonDesc = loadFont('Play-Bold', 28)
+            local fontFloorButtonDesc = loadFont('Play', 28)
             local color = {r = 255, g = 0, b = 0, a = 1}
+            local color2 = {r = 255, g = 255, b = 255, a = 1}
+            local color3 = {r = 255, g = 255, b = 255, a = 1}
             setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
             addText(theLayer, fontFloorButton, floorName, ix, iy)
-            setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
+            setNextFillColor(theLayer, color2.r, color2.g, color2.b, color2.a)
             addText(theLayer, fontFloorButtonDesc, floorAlt, ix + 80, iy)
-            setNextFillColor(theLayer, 255-color.r, 255-color.g, 255-color.b, color.a)
+            setNextFillColor(theLayer, color3.r, color3.g, color3.b, color3.a)
             addCircle(theLayer, ix+10, iy-10, 40)
+        end
+
+        function drawToken(theLayer)
+            addImage(top_layer, token, rx/1.5, ry/2, 50, 50)
         end
 
         --setNextStrokeWidth(top_layer, 1) 
@@ -77,8 +84,11 @@ if not displayInit then
         --setNextFillColor(layer, color.r, color.g, color.b, 1.0)
         --addBoxRounded(layer, (rx-sx-16)/2, (ry-sy-16)/2, sx+16, sy+16, 8)
 
-        drawLocationInfo(top_layer, rx/1.5, ry/2)
-        drawFloorButton(top_layer, "L", newState.homeAlt, 100, ry-100)
+        drawLocationInfo(top_layer, 100, ry/2)
+        drawFloorButton(top_layer, "L", newState.homeAlt, rx-300, ry-100)
+        drawFloorButton(top_layer, "2", newState.floor2Alt, rx-300, ry-300)
+        drawFloorButton(top_layer, "3", newState.floor3Alt, rx-300, ry-500)
+        drawToken(top_layer)
 
         addImage(top_layer, fascia, 0, 0, rx, ry)
 
@@ -106,8 +116,8 @@ local newScreenValues = {
     longitudinalThrust = string.format("%.2f",ap.longitudinalAcceleration),
     lateralThrust = string.format("%.2f",ap.lateralAcceleration),
     homeAlt = string.format("%.2f",homeAltitude),
-    floor2Alt = 0,
-    floor3Alt = 0,
+    floor2Alt = floor2,
+    floor3Alt = floor3,
     diagnostics = false,
     clickX = 0,
     clickY = 0,
