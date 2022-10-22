@@ -1,4 +1,4 @@
-$slots = "{`"slots`":{`"0`":{`"name`":`"core`",`"type`":{`"events`":[],`"methods`":[]}},`"1`":{`"name`":`"atmofueltank_1`",`"type`":{`"events`":[],`"methods`":[]}},`"2`":{`"name`":`"screenMain`",`"type`":{`"events`":[],`"methods`":[]}},`"3`":{`"name`":`"screenTelemetry`",`"type`":{`"events`":[],`"methods`":[]}},`"4`":{`"name`":`"slot5`",`"type`":{`"events`":[],`"methods`":[]}},`"5`":{`"name`":`"slot6`",`"type`":{`"events`":[],`"methods`":[]}},`"6`":{`"name`":`"slot7`",`"type`":{`"events`":[],`"methods`":[]}},`"7`":{`"name`":`"slot8`",`"type`":{`"events`":[],`"methods`":[]}},`"8`":{`"name`":`"slot9`",`"type`":{`"events`":[],`"methods`":[]}},`"9`":{`"name`":`"slot10`",`"type`":{`"events`":[],`"methods`":[]}},`"-1`":{`"name`":`"unit`",`"type`":{`"events`":[],`"methods`":[]}},`"-3`":{`"name`":`"player`",`"type`":{`"events`":[],`"methods`":[]}},`"-2`":{`"name`":`"construct`",`"type`":{`"events`":[],`"methods`":[]}},`"-4`":{`"name`":`"system`",`"type`":{`"events`":[],`"methods`":[]}},`"-5`":{`"name`":`"library`",`"type`":{`"events`":[],`"methods`":[]}}}"
+$slots = "{`"slots`":{`"0`":{`"name`":`"core`",`"type`":{`"events`":[],`"methods`":[]}},`"1`":{`"name`":`"atmofueltank_1`",`"type`":{`"events`":[],`"methods`":[]}},`"2`":{`"name`":`"atmofueltank_2`",`"type`":{`"events`":[],`"methods`":[]}},`"3`":{`"name`":`"spacefueltank_1`",`"type`":{`"events`":[],`"methods`":[]}},`"4`":{`"name`":`"spacefueltank_2`",`"type`":{`"events`":[],`"methods`":[]}},`"5`":{`"name`":`"screenMain`",`"type`":{`"events`":[],`"methods`":[]}},`"6`":{`"name`":`"data`",`"type`":{`"events`":[],`"methods`":[]}},`"7`":{`"name`":`"slot8`",`"type`":{`"events`":[],`"methods`":[]}},`"8`":{`"name`":`"slot9`",`"type`":{`"events`":[],`"methods`":[]}},`"9`":{`"name`":`"slot10`",`"type`":{`"events`":[],`"methods`":[]}},`"-1`":{`"name`":`"unit`",`"type`":{`"events`":[],`"methods`":[]}},`"-3`":{`"name`":`"player`",`"type`":{`"events`":[],`"methods`":[]}},`"-2`":{`"name`":`"construct`",`"type`":{`"events`":[],`"methods`":[]}},`"-4`":{`"name`":`"system`",`"type`":{`"events`":[],`"methods`":[]}},`"-5`":{`"name`":`"library`",`"type`":{`"events`":[],`"methods`":[]}}}"
 $outputFileName = "Elevator.conf.json"
 
 enum SlotKeyNum
@@ -39,7 +39,7 @@ for($i = 0; $i -lt $directories.Count; $i++)
     $code = ""
     foreach($line in [System.IO.File]::ReadLines($fullFileNames[$i]))
     {
-        if($line.Contains("--"))
+        if($line.Contains("--") -and -not $line.Contains("export") )
         {
             $line = $line.Split("--")
             $code = $code + $line[0]
