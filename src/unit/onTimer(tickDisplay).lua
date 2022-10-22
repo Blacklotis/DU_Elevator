@@ -15,6 +15,9 @@ if not displayInit then
             vertThrust = 0,
             longitudinalThrust = 0,
             lateralThrust = 0,
+            homeAlt = 0,
+            floor2Alt = 0,
+            floor3Alt = 0,
             diagnostics = false,
             clickX = 0,
             clickY = 0,
@@ -52,6 +55,18 @@ if not displayInit then
             --addBoxRounded(theLayer, ix, iy, 150, 100, 8)
         end
 
+        function drawFloorButton(theLayer, floorName, floorAlt, ix, iy)
+            local fontFloorButton = loadFont('Play-Bold', 40)
+            local fontFloorButtonDesc = loadFont('Play-Bold', 28)
+            local color = {r = 255, g = 0, b = 0, a = 1}
+            setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
+            addText(theLayer, fontFloorButton, floorName, ix, iy)
+            setNextFillColor(theLayer, color.r, color.g, color.b, color.a)
+            addText(theLayer, fontFloorButtonDesc, floorAlt, ix + 80, iy)
+            setNextFillColor(theLayer, 255-color.r, 255-color.g, 255-color.b, color.a)
+            addCircle(theLayer, ix+10, iy-10, 40)
+        end
+
         --setNextStrokeWidth(top_layer, 1) 
         --setNextStrokeColor(top_layer, 0, 255, 255, 0.8)
         --setNextShadow(top_layer, 5, 0, 255, 255, .5)
@@ -63,6 +78,7 @@ if not displayInit then
         --addBoxRounded(layer, (rx-sx-16)/2, (ry-sy-16)/2, sx+16, sy+16, 8)
 
         drawLocationInfo(top_layer, rx/1.5, ry/2)
+        drawFloorButton(top_layer, "L", newState.homeAlt, 100, ry-100)
 
         addImage(top_layer, fascia, 0, 0, rx, ry)
 
@@ -89,6 +105,9 @@ local newScreenValues = {
     vertThrust = string.format("%.2f",ap.verticalAcceleration),
     longitudinalThrust = string.format("%.2f",ap.longitudinalAcceleration),
     lateralThrust = string.format("%.2f",ap.lateralAcceleration),
+    homeAlt = 0,
+    floor2Alt = 0,
+    floor3Alt = 0,
     diagnostics = false,
     clickX = 0,
     clickY = 0,

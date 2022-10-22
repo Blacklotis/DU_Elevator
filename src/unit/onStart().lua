@@ -95,9 +95,9 @@ if warpdrive ~= nil then warpdrive.showWidget() end
 if gyro ~= nil then gyro.showWidget() end
 if shield ~= nil then shield.showWidget() end
 
--- freeze the player if he is remote controlling the construct
+-- unfreeze the player if he is remote controlling the construct
 if unit.isRemoteControlled() == 1 then
-    player.freeze(1)
+    player.freeze(0)
 end
 
 -- landing gear
@@ -112,7 +112,7 @@ end
 
 Alioth = Planet:new(0, 0, 199718.78, vec3(-8.0000, -8.0000, -126303.0000), 126067.8984375)
 
-ap = AutoPilot:new(false)
+ap = AutoPilot:new(true)
 ap.currentPlanet = Alioth
 ap.currentTarget = getDestination(ap.currentPlanet.center, vec3(construct.getWorldPosition()), ap.targetAltitude)
 ap.headingTarget = getHeading(vec3(construct.getWorldOrientationForward()))
