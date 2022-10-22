@@ -27,31 +27,31 @@ local function composeAxisAccelerationFromTargetSpeed(commandAxis, targetSpeed)
 
     local targetAxisSpeedMS = targetSpeed * constants.kph2m
 
-    if targetSpeedPIDLat == nil then -- Changed first param from 1 to 10...
-        targetSpeedPIDLat = pid.new(10, 0, 10.0) -- The PID used to compute acceleration to reach target speed
+    if targetSpeedPIDLat == nil then
+        targetSpeedPIDLat = pid.new(10, 0, 10.0)
     end
 
-    if targetSpeedPIDLon == nil then -- Changed first param from 1 to 10...
-        targetSpeedPIDLon = pid.new(10, 0, 10.0) -- The PID used to compute acceleration to reach target speed
+    if targetSpeedPIDLon == nil then
+        targetSpeedPIDLon = pid.new(10, 0, 10.0)
     end
 
-    if targetSpeedPIDVert == nil then -- Changed first param from 1 to 10...
-        targetSpeedPIDVert = pid.new(10, 0, 10.0) -- The PID used to compute acceleration to reach target speed
+    if targetSpeedPIDVert == nil then
+        targetSpeedPIDVert = pid.new(10, 0, 10.0)
     end
 
     local accelerationCommand = 0
     if (commandAxis == axisCommandId.longitudinal) then
-        targetSpeedPIDLon:inject(targetAxisSpeedMS - currentAxisSpeedMS) -- update PID
+        targetSpeedPIDLon:inject(targetAxisSpeedMS - currentAxisSpeedMS)
         accelerationCommand = targetSpeedPIDLon:get()
     elseif (commandAxis == axisCommandId.vertical) then
-        targetSpeedPIDVert:inject(targetAxisSpeedMS - currentAxisSpeedMS) -- update PID
+        targetSpeedPIDVert:inject(targetAxisSpeedMS - currentAxisSpeedMS)
         accelerationCommand = targetSpeedPIDVert:get()
     elseif (commandAxis == axisCommandId.lateral) then
-        targetSpeedPIDLat:inject(targetAxisSpeedMS - currentAxisSpeedMS) -- update PID
+        targetSpeedPIDLat:inject(targetAxisSpeedMS - currentAxisSpeedMS)
         accelerationCommand = targetSpeedPIDLat:get()
     end
 
-    local finalAcceleration = (accelerationCommand - airResistanceAccelerationCommand - gravityAccelerationCommand) * axisWorldDirection  -- Try to compensate air friction
+    local finalAcceleration = (accelerationCommand - airResistanceAccelerationCommand - gravityAccelerationCommand) * axisWorldDirection 
 
     return finalAcceleration
 end
