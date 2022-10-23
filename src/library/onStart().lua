@@ -52,6 +52,10 @@ function AutoPilot:new(enabled)
     return o
 end
 
+function isClickWithin(cX,cY, startX, startY, endX, endY)
+    return cX >= startX and cX <= endX and cY >= startY and cY <= endY
+end
+
 function timeToTarget(distance, currentSpeed)
     return distannce/currentspeed
 end
