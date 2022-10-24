@@ -47,16 +47,20 @@ if not displayInit then
         local top_layer = createLayer()
 
         function getPositionOfToken()
+            local top = 75
+            local middle = 281
+            local bottom = 488
+
             if newState.currentAlt < newState.homeAlt then
-                return 513-25
+                return bottom
             elseif newState.currentAlt > newState.homeAlt and newState.currentAlt < newState.floor2Alt then
                 local tempAlt = (newState.currentAlt - newState.homeAlt) / (newState.floor2Alt - newState.homeAlt)
-                return 513-25 - tempAlt * (513-25 - 613/2)
+                return bottom - tempAlt * (bottom - middle)
             elseif newState.currentAlt > newState.floor2Alt and newState.currentAlt < newState.floor3Alt then
                 local tempAlt = (newState.currentAlt - newState.floor2Alt) / (newState.floor3Alt - newState.floor2Alt)
-                return 613/2 - tempAlt * (613/2 - 75)
+                return middle - tempAlt * (middle - top)
             else
-                return 75
+                return top
             end
         end
 
